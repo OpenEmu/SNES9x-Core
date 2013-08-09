@@ -26,6 +26,8 @@
 	<string>SNESGameCore</string>
 	<key>OEGameCorePlayerCount</key>
 	<string>8</string>
+	<key>OEGameCoreSupportsCheatCode</key>
+	<true/>
 	<key>OEProjectURL</key>
 	<string>http://www.snes9x.com/</string>
 	<key>OESystemIdentifiers</key>

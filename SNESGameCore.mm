@@ -40,6 +40,7 @@
 #include "movie.h"
 #include "snapshot.h"
 #include "screenshot.h"
+#include "cheats.h"
 #import "OESNESSystemResponderClient.h"
 
 #import <AudioToolbox/AudioToolbox.h>
@@ -289,6 +290,28 @@ bool8 S9xOpenSoundDevice(void)
 - (BOOL)loadStateFromFileAtPath: (NSString *) fileName
 {
     return S9xUnfreezeGame([fileName UTF8String]) ? YES : NO;
+}
+
+- (void)setCheat:(NSString *)code setType:(NSString *)type setEnabled:(BOOL)enabled
+{
+    Settings.ApplyCheats = true;
+    
+    NSArray *multipleCodes = [[NSArray alloc] init];
+    multipleCodes = [code componentsSeparatedByString:@"+"];
+    
+    for (NSString *singleCode in multipleCodes) {
+        // Sanitize for PAR codes that might contain colons
+        const char *cheatCode = [[singleCode stringByReplacingOccurrencesOfString:@":"
+                                                                   withString:@""] UTF8String];
+        uint32		address;
+        uint8		byte;
+        
+        // Both will determine if valid cheat code or not
+        S9xGameGenieToRaw(cheatCode, address, byte);
+        S9xProActionReplayToRaw(cheatCode, address, byte);
+        
+        S9xAddCheat(TRUE, FALSE, address, byte);
+    }
 }
 
 @end
