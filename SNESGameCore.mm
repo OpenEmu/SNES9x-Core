@@ -104,7 +104,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     [[self ringBufferAtIndex:0] write:soundBuffer maxLength:sizeof(UInt16) * [self channelCount] * (SAMPLERATE / [self frameInterval])];
 }
 
-- (BOOL)loadFileAtPath:(NSString *)path
+- (BOOL)loadFileAtPath:(NSString *)path error:(NSError **)error
 {
     memset(&Settings, 0, sizeof(Settings));
     Settings.DontSaveOopsSnapshot = true;
