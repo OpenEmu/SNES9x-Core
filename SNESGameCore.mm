@@ -294,26 +294,46 @@ bool8 S9xOpenSoundDevice(void)
     return S9xUnfreezeGame([fileName UTF8String]) ? YES : NO;
 }
 
+#pragma mark - Cheats
+
+NSMutableDictionary *cheatList = [[NSMutableDictionary alloc] init];
+
 - (void)setCheat:(NSString *)code setType:(NSString *)type setEnabled:(BOOL)enabled
 {
-    Settings.ApplyCheats = true;
+    if (enabled)
+        [cheatList setValue:@YES forKey:code];
+    else
+        [cheatList removeObjectForKey:code];
+    
+    S9xDeleteCheats();
     
     NSArray *multipleCodes = [[NSArray alloc] init];
-    multipleCodes = [code componentsSeparatedByString:@"+"];
     
-    for (NSString *singleCode in multipleCodes) {
-        // Sanitize for PAR codes that might contain colons
-        const char *cheatCode = [[singleCode stringByReplacingOccurrencesOfString:@":"
-                                                                   withString:@""] UTF8String];
-        uint32		address;
-        uint8		byte;
-        
-        // Both will determine if valid cheat code or not
-        S9xGameGenieToRaw(cheatCode, address, byte);
-        S9xProActionReplayToRaw(cheatCode, address, byte);
-        
-        S9xAddCheat(TRUE, FALSE, address, byte);
+    // Apply enabled cheats found in dictionary
+    for (id key in cheatList)
+    {
+        if ([[cheatList valueForKey:key] isEqual:@YES])
+        {
+            // Handle multi-line cheats
+            multipleCodes = [key componentsSeparatedByString:@"+"];
+            for (NSString *singleCode in multipleCodes) {
+                // Sanitize for PAR codes that might contain colons
+                const char *cheatCode = [[singleCode stringByReplacingOccurrencesOfString:@":"
+                                                                               withString:@""] UTF8String];
+                uint32		address;
+                uint8		byte;
+                
+                // Both will determine if valid cheat code or not
+                S9xGameGenieToRaw(cheatCode, address, byte);
+                S9xProActionReplayToRaw(cheatCode, address, byte);
+                
+                S9xAddCheat(true, true, address, byte);
+            }
+        }
     }
+    
+    Settings.ApplyCheats = true;
+    S9xApplyCheats();
 }
 
 @end
