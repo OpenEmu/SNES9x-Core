@@ -47,7 +47,7 @@
 #import <AudioUnit/AudioUnit.h>
 #include <pthread.h>
 
-#define SAMPLERATE      48000
+#define SAMPLERATE      32000
 #define SIZESOUNDBUFFER SAMPLERATE / 50 * 4
 
 @interface SNESGameCore () <OESNESSystemResponderClient>
@@ -99,9 +99,11 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 {
     IPPU.RenderThisFrame = !skip;
     S9xMainLoop();
-
-    S9xMixSamples((unsigned char *)soundBuffer, (SAMPLERATE / [self frameInterval]) * [self channelCount]);
-    [[self ringBufferAtIndex:0] write:soundBuffer maxLength:sizeof(UInt16) * [self channelCount] * (SAMPLERATE / [self frameInterval])];
+    
+    S9xFinalizeSamples();
+    int samples = S9xGetSampleCount();
+    S9xMixSamples((uint8_t*)soundBuffer, samples);
+    [[self ringBufferAtIndex:0] write:soundBuffer maxLength:samples * 2];
 }
 
 - (BOOL)loadFileAtPath:(NSString *)path error:(NSError **)error
@@ -119,7 +121,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     Settings.JustifierMaster        = true;
     Settings.BlockInvalidVRAMAccess = true;
     Settings.HDMATimingHack         = 100;
-    Settings.SoundPlaybackRate      = 48000;
+    Settings.SoundPlaybackRate      = SAMPLERATE;
     Settings.Stereo                 = true;
     Settings.SixteenBitSound        = true;
     Settings.Transparency           = true;
@@ -160,7 +162,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     /* buffer_ms : buffer size given in millisecond
      lag_ms    : allowable time-lag given in millisecond
      S9xInitSound(macSoundBuffer_ms, macSoundLagEnable ? macSoundBuffer_ms / 2 : 0); */
-    if(!S9xInitSound(SIZESOUNDBUFFER, 0))
+    if(!S9xInitSound(100, 0))
         NSLog(@"Couldn't init sound");
 
     Settings.NoPatch = true;
