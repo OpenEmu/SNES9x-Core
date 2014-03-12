@@ -276,7 +276,7 @@ bool8 S9xOpenSoundDevice(void)
 
 - (NSTimeInterval)frameInterval
 {
-    return Settings.PAL ? 50 : 60;
+    return Settings.PAL ? 50 : 60.098;
 }
 
 - (NSUInteger)channelCount
