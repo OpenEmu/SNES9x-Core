@@ -24,10 +24,16 @@
 	<string>OEGameCoreController</string>
 	<key>OEGameCoreClass</key>
 	<string>SNESGameCore</string>
+	<key>OEGameCoreOptions</key>
+	<dict>
+		<key>openemu.system.snes</key>
+		<dict>
+			<key>OEGameCoreSupportsCheatCode</key>
+			<true/>
+		</dict>
+	</dict>
 	<key>OEGameCorePlayerCount</key>
 	<string>8</string>
-	<key>OEGameCoreSupportsCheatCode</key>
-	<true/>
 	<key>OEProjectURL</key>
 	<string>http://www.snes9x.com/</string>
 	<key>OESystemIdentifiers</key>
