@@ -58,6 +58,7 @@
 
 @end
 
+static __weak SNESGameCore *_current;
 @implementation SNESGameCore
 
 NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", @"X", @"Y", @"L", @"R", @"Start", @"Select", nil };
@@ -99,11 +100,6 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 {
     IPPU.RenderThisFrame = !skip;
     S9xMainLoop();
-    
-    S9xFinalizeSamples();
-    int samples = S9xGetSampleCount();
-    S9xMixSamples((uint8_t*)soundBuffer, samples);
-    [[self ringBufferAtIndex:0] write:soundBuffer maxLength:samples * 2];
 }
 
 - (BOOL)loadFileAtPath:(NSString *)path error:(NSError **)error
@@ -164,6 +160,8 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
      S9xInitSound(macSoundBuffer_ms, macSoundLagEnable ? macSoundBuffer_ms / 2 : 0); */
     if(!S9xInitSound(100, 0))
         NSLog(@"Couldn't init sound");
+    
+    S9xSetSamplesAvailableCallback(FinalizeSamplesAudioCallback, NULL);
 
     Settings.NoPatch = true;
     Settings.BSXBootup = false;
@@ -194,6 +192,16 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 bool8 S9xOpenSoundDevice(void)
 {
 	return true;
+}
+
+static void FinalizeSamplesAudioCallback(void *)
+{
+    GET_CURRENT_AND_RETURN();
+    
+    S9xFinalizeSamples();
+    int samples = S9xGetSampleCount();
+    S9xMixSamples((uint8_t*)current->soundBuffer, samples);
+    [[current ringBufferAtIndex:0] write:current->soundBuffer maxLength:samples * 2];
 }
 
 #pragma mark Video
@@ -246,6 +254,16 @@ bool8 S9xOpenSoundDevice(void)
     }
 
     [super stopEmulation];
+}
+
+- (id)init
+{
+    if((self = [super init]))
+    {
+        _current = self;
+    }
+    
+    return self;
 }
 
 - (void)dealloc
