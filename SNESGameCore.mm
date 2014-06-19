@@ -43,10 +43,6 @@
 #include "cheats.h"
 #import "OESNESSystemResponderClient.h"
 
-#import <AudioToolbox/AudioToolbox.h>
-#import <AudioUnit/AudioUnit.h>
-#include <pthread.h>
-
 #define SAMPLERATE      32000
 #define SIZESOUNDBUFFER SAMPLERATE / 50 * 4
 
@@ -105,38 +101,28 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 - (BOOL)loadFileAtPath:(NSString *)path error:(NSError **)error
 {
     memset(&Settings, 0, sizeof(Settings));
-    Settings.DontSaveOopsSnapshot = true;
-    Settings.ForcePAL      = false;
-    Settings.ForceNTSC     = false;
-    Settings.ForceHeader   = false;
-    Settings.ForceNoHeader = false;
 
     Settings.MouseMaster            = true;
     Settings.SuperScopeMaster       = true;
     Settings.MultiPlayer5Master     = true;
     Settings.JustifierMaster        = true;
-    Settings.BlockInvalidVRAMAccess = true;
-    Settings.HDMATimingHack         = 100;
-    Settings.SoundPlaybackRate      = SAMPLERATE;
-    Settings.Stereo                 = true;
     Settings.SixteenBitSound        = true;
-    Settings.Transparency           = true;
+    Settings.Stereo                 = true;
+    Settings.SoundPlaybackRate      = SAMPLERATE;
+    Settings.SoundInputRate         = 32000;
     Settings.SupportHiRes           = true;
+    Settings.Transparency           = true;
+    Settings.HDMATimingHack         = 100;
+    Settings.BlockInvalidVRAMAccessMaster = true; // disabling may fix some homebrew or other games
     GFX.InfoString                  = NULL;
     GFX.InfoStringTimeout           = 0;
-    //Settings.OpenGLEnable           = true; -enable this and use (BOOL)rendersToOpenGL
-    Settings.SoundInputRate         = 32000;
-    //Settings.DumpStreamsMaxFrames   = -1;
-    //Settings.AutoDisplayMessages    = true;
-    //Settings.FrameTimeNTSC          = 16667;
+    Settings.DontSaveOopsSnapshot   = true;
 
     if(videoBuffer) free(videoBuffer);
 
     videoBuffer = (unsigned char *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
-    //GFX.PixelFormat = 3;
 
     GFX.Pitch = 512 * 2;
-    //GFX.PPL = SNES_WIDTH;
     GFX.Screen = (short unsigned int *)videoBuffer;
 
     S9xUnmapAllControls();
@@ -146,7 +132,6 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     S9xSetController(0, CTL_JOYPAD, 0, 0, 0, 0);
     S9xSetController(1, CTL_JOYPAD, 1, 0, 0, 0);
 
-    //S9xSetRenderPixelFormat(RGB565);
     if(!Memory.Init() || !S9xInitAPU() || !S9xGraphicsInit())
     {
         NSLog(@"Couldn't init");
@@ -173,7 +158,6 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 
         NSString *batterySavesDirectory = [self batterySavesDirectoryPath];
 
-        //if((batterySavesDirectory != nil) && ![batterySavesDirectory isEqualToString:@""])
         if([batterySavesDirectory length] != 0)
         {
             [[NSFileManager defaultManager] createDirectoryAtPath:batterySavesDirectory withIntermediateDirectories:YES attributes:nil error:NULL];
