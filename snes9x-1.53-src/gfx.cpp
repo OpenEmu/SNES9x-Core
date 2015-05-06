@@ -2227,7 +2227,7 @@ static uint16 get_crosshair_color (uint8 color)
 
 void S9xDrawCrosshair (const char *crosshair, uint8 fgcolor, uint8 bgcolor, int16 x, int16 y)
 {
-	if (!crosshair)
+	//if (!crosshair)
 		return;
 
 	int16	r, rx = 1, c, cx = 1, W = SNES_WIDTH, H = PPU.ScreenHeight;
