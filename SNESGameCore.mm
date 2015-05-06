@@ -273,7 +273,7 @@ static void FinalizeSamplesAudioCallback(void *)
 
 - (double)audioSampleRate
 {
-    return SAMPLERATE;
+    return 32040.5;
 }
 
 - (NSTimeInterval)frameInterval
