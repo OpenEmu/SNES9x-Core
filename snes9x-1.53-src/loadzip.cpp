@@ -176,213 +176,145 @@
  ***********************************************************************************/
 
 
-#ifndef _MEMMAP_H_
-#define _MEMMAP_H_
+#ifdef UNZIP_SUPPORT
 
+#include <assert.h>
+#include <ctype.h>
+#include "unzip/unzip.h"
 #include "snes9x.h"
+#include "memmap.h"
 
-#define MEMMAP_BLOCK_SIZE	(0x1000)
-#define MEMMAP_NUM_BLOCKS	(0x1000000 / MEMMAP_BLOCK_SIZE)
-#define MEMMAP_SHIFT		(12)
-#define MEMMAP_MASK			(MEMMAP_BLOCK_SIZE - 1)
 
-struct CMemory
+bool8 LoadZip (const char *zipname, uint32 *TotalFileSize, uint8 *buffer)
 {
-	enum
-	{ MAX_ROM_SIZE = 0x800000 };
+	*TotalFileSize = 0;
 
-	enum file_formats
-	{ FILE_ZIP, FILE_JMA, FILE_DEFAULT };
+	unzFile	file = unzOpen(zipname);
+	if (file == NULL)
+		return (FALSE);
 
-	enum
-	{ NOPE, YEAH, BIGFIRST, SMALLFIRST };
+	// find largest file in zip file (under MAX_ROM_SIZE) or a file with extension .1
+	char	filename[132];
+	uint32	filesize = 0;
+	int		port = unzGoToFirstFile(file);
 
-	enum
-	{ MAP_TYPE_I_O, MAP_TYPE_ROM, MAP_TYPE_RAM };
+	unz_file_info	info;
 
-	enum
+	while (port == UNZ_OK)
 	{
-		MAP_CPU,
-		MAP_PPU,
-		MAP_LOROM_SRAM,
-		MAP_LOROM_SRAM_B,
-		MAP_HIROM_SRAM,
-		MAP_DSP,
-		MAP_SA1RAM,
-		MAP_BWRAM,
-		MAP_BWRAM_BITMAP,
-		MAP_BWRAM_BITMAP2,
-		MAP_SPC7110_ROM,
-		MAP_SPC7110_DRAM,
-		MAP_RONLY_SRAM,
-		MAP_C4,
-		MAP_OBC_RAM,
-		MAP_SETA_DSP,
-		MAP_SETA_RISC,
-		MAP_BSX,
-		MAP_NONE,
-		MAP_LAST
-	};
+		char	name[132];
+		unzGetCurrentFileInfo(file, &info, name, 128, NULL, 0, NULL, 0);
 
-	uint8	NSRTHeader[32];
-	int32	HeaderCount;
+		if (info.uncompressed_size > CMemory::MAX_ROM_SIZE + 512)
+		{
+			port = unzGoToNextFile(file);
+			continue;
+		}
 
-	uint8	*RAM;
-	uint8	*ROM;
-	uint8	*SRAM;
-	uint8	*VRAM;
-	uint8	*FillRAM;
-	uint8	*BWRAM;
-	uint8	*C4RAM;
-	uint8	*OBC1RAM;
-	uint8	*BSRAM;
-	uint8	*BIOSROM;
+		if (info.uncompressed_size > filesize)
+		{
+			strcpy(filename, name);
+			filesize = info.uncompressed_size;
+		}
 
-	uint8	*Map[MEMMAP_NUM_BLOCKS];
-	uint8	*WriteMap[MEMMAP_NUM_BLOCKS];
-	uint8	BlockIsRAM[MEMMAP_NUM_BLOCKS];
-	uint8	BlockIsROM[MEMMAP_NUM_BLOCKS];
-	uint8	ExtendedFormat;
+		int	len = strlen(name);
+		if (len > 2 && name[len - 2] == '.' && name[len - 1] == '1')
+		{
+			strcpy(filename, name);
+			filesize = info.uncompressed_size;
+			break;
+		}
 
-	char	ROMFilename[PATH_MAX + 1];
-	char	ROMName[ROM_NAME_LEN];
-	char	RawROMName[ROM_NAME_LEN];
-	char	ROMId[5];
-	int32	CompanyId;
-	uint8	ROMRegion;
-	uint8	ROMSpeed;
-	uint8	ROMType;
-	uint8	ROMSize;
-	uint32	ROMChecksum;
-	uint32	ROMComplementChecksum;
-	uint32	ROMCRC32;
-	int32	ROMFramesPerSecond;
+		port = unzGoToNextFile(file);
+	}
 
-	bool8	HiROM;
-	bool8	LoROM;
-	uint8	SRAMSize;
-	uint32	SRAMMask;
-	uint32	CalculatedSize;
-	uint32	CalculatedChecksum;
+	if (!(port == UNZ_END_OF_LIST_OF_FILE || port == UNZ_OK) || filesize == 0)
+	{
+		assert(unzClose(file) == UNZ_OK);
+		return (FALSE);
+	}
 
-	// ports can assign this to perform some custom action upon loading a ROM (such as adjusting controls)
-	void	(*PostRomInitFunc) (void);
+	// find extension
+	char	tmp[2] = { 0, 0 };
+	char	*ext = strrchr(filename, '.');
+	if (ext)
+		ext++;
+	else
+		ext = tmp;
 
-	bool8	Init (void);
-	void	Deinit (void);
+	uint8	*ptr = buffer;
+	bool8	more = FALSE;
 
-	int		ScoreHiROM (bool8, int32 romoff = 0);
-	int		ScoreLoROM (bool8, int32 romoff = 0);
-	uint32	HeaderRemove (uint32, uint8 *);
-	uint32	FileLoader (uint8 *, const char *, uint32);
-    uint32  MemLoader (uint8 *, const char*, uint32);
-    bool8   LoadROMMem (const uint8 *, uint32);
-	bool8	LoadROM (const char *);
-    bool8	LoadROMInt (int32);
-    bool8   LoadMultiCartMem (const uint8 *, uint32, const uint8 *, uint32, const uint8 *, uint32);
-	bool8	LoadMultiCart (const char *, const char *);
-    bool8	LoadMultiCartInt ();
-	bool8	LoadSufamiTurbo ();
-	bool8	LoadSameGame ();
-	bool8	LoadGNEXT ();
-	bool8	LoadSRAM (const char *);
-	bool8	SaveSRAM (const char *);
-	void	ClearSRAM (bool8 onlyNonSavedSRAM = 0);
-	bool8	LoadSRTC (void);
-	bool8	SaveSRTC (void);
+	unzLocateFile(file, filename, 1);
+	unzGetCurrentFileInfo(file, &info, filename, 128, NULL, 0, NULL, 0);
 
-	char *	Safe (const char *);
-	char *	SafeANK (const char *);
-	void	ParseSNESHeader (uint8 *);
-	void	InitROM (void);
+	if (unzOpenCurrentFile(file) != UNZ_OK)
+	{
+		unzClose(file);
+		return (FALSE);
+	}
 
-	uint32	map_mirror (uint32, uint32);
-	void	map_lorom (uint32, uint32, uint32, uint32, uint32);
-	void	map_hirom (uint32, uint32, uint32, uint32, uint32);
-	void	map_lorom_offset (uint32, uint32, uint32, uint32, uint32, uint32);
-	void	map_hirom_offset (uint32, uint32, uint32, uint32, uint32, uint32);
-	void	map_space (uint32, uint32, uint32, uint32, uint8 *);
-	void	map_index (uint32, uint32, uint32, uint32, int, int);
-	void	map_System (void);
-	void	map_WRAM (void);
-	void	map_LoROMSRAM (void);
-	void	map_HiROMSRAM (void);
-	void	map_DSP (void);
-	void	map_C4 (void);
-	void	map_OBC1 (void);
-	void	map_SetaRISC (void);
-	void	map_SetaDSP (void);
-	void	map_WriteProtectROM (void);
-	void	Map_Initialize (void);
-	void	Map_LoROMMap (void);
-	void	Map_NoMAD1LoROMMap (void);
-	void	Map_JumboLoROMMap (void);
-	void	Map_ROM24MBSLoROMMap (void);
-	void	Map_SRAM512KLoROMMap (void);
-	void	Map_SufamiTurboLoROMMap (void);
-	void	Map_SufamiTurboPseudoLoROMMap (void);
-	void	Map_SuperFXLoROMMap (void);
-	void	Map_SetaDSPLoROMMap (void);
-	void	Map_SDD1LoROMMap (void);
-	void	Map_SA1LoROMMap (void);
-	void	Map_GNEXTSA1LoROMMap (void);
-	void	Map_HiROMMap (void);
-	void	Map_ExtendedHiROMMap (void);
-	void	Map_SameGameHiROMMap (void);
-	void	Map_SPC7110HiROMMap (void);
+	do
+	{
+		assert(info.uncompressed_size <= CMemory::MAX_ROM_SIZE + 512);
 
-	uint16	checksum_calc_sum (uint8 *, uint32);
-	uint16	checksum_mirror_sum (uint8 *, uint32 &, uint32 mask = 0x800000);
-	void	Checksum_Calculate (void);
+		uint32 FileSize = info.uncompressed_size;
+		int	l = unzReadCurrentFile(file, ptr, FileSize);
 
-	bool8	match_na (const char *);
-	bool8	match_nn (const char *);
-	bool8	match_nc (const char *);
-	bool8	match_id (const char *);
-	void	ApplyROMFixes (void);
-	void	CheckForAnyPatch (const char *, bool8, int32 &);
+		if (unzCloseCurrentFile(file) == UNZ_CRCERROR)
+		{
+			unzClose(file);
+			return (FALSE);
+		}
 
-	void	MakeRomInfoText (char *);
+		if (l <= 0 || l != FileSize)
+		{
+			unzClose(file);
+			return (FALSE);
+		}
 
-	const char *	MapType (void);
-	const char *	StaticRAMSize (void);
-	const char *	Size (void);
-	const char *	Revision (void);
-	const char *	KartContents (void);
-	const char *	Country (void);
-	const char *	PublishingCompany (void);
-};
+		FileSize = Memory.HeaderRemove(FileSize, ptr);
+		ptr += FileSize;
+		*TotalFileSize += FileSize;
 
-struct SMulti
-{
-	int		cartType;
-	int32	cartSizeA, cartSizeB;
-	int32	sramSizeA, sramSizeB;
-	uint32	sramMaskA, sramMaskB;
-	uint32	cartOffsetA, cartOffsetB;
-	uint8	*sramA, *sramB;
-	char	fileNameA[PATH_MAX + 1], fileNameB[PATH_MAX + 1];
-};
+		int	len;
 
-extern CMemory	Memory;
-extern SMulti	Multi;
+		if (ptr - Memory.ROM < CMemory::MAX_ROM_SIZE + 512 && (isdigit(ext[0]) && ext[1] == 0 && ext[0] < '9'))
+		{
+			more = TRUE;
+			ext[0]++;
+		}
+		else
+		if (ptr - Memory.ROM < CMemory::MAX_ROM_SIZE + 512)
+		{
+			if (ext == tmp)
+				len = strlen(filename);
+			else
+				len = ext - filename - 1;
 
-void S9xAutoSaveSRAM (void);
-bool8 LoadZip(const char *, uint32 *, uint8 *);
+			if ((len == 7 || len == 8) && strncasecmp(filename, "sf", 2) == 0 &&
+				isdigit(filename[2]) && isdigit(filename[3]) && isdigit(filename[4]) &&
+				isdigit(filename[5]) && isalpha(filename[len - 1]))
+			{
+				more = TRUE;
+				filename[len - 1]++;
+			}
+		}
+		else
+			more = FALSE;
 
-enum s9xwrap_t
-{
-	WRAP_NONE,
-	WRAP_BANK,
-	WRAP_PAGE
-};
+		if (more)
+		{
+			if (unzLocateFile(file, filename, 1) != UNZ_OK ||
+				unzGetCurrentFileInfo(file, &info, filename, 128, NULL, 0, NULL, 0) != UNZ_OK ||
+				unzOpenCurrentFile(file) != UNZ_OK)
+				break;
+		}
+	} while (more);
 
-enum s9xwriteorder_t
-{
-	WRITE_01,
-	WRITE_10
-};
+	unzClose(file);
 
-#include "getset.h"
+	return (TRUE);
+}
 
 #endif

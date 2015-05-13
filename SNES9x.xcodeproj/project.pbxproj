@@ -38,6 +38,7 @@
 		3DA5C31814DCF0180029660B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA5C31714DCF0180029660B /* libz.dylib */; };
 		826C1B1F0F420C2200FB9014 /* SNESGameCore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 826C1B1E0F420C2200FB9014 /* SNESGameCore.mm */; };
 		828F16CB0F43A10000FD7321 /* APPL.icns in Resources */ = {isa = PBXBuildFile; fileRef = 828F16CA0F43A10000FD7321 /* APPL.icns */; };
+		87431C061B02F20700F82158 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87431C041B02F20700F82158 /* stream.cpp */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		94790D7A14C0C46900B30798 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790CDC14C0C46900B30798 /* apu.cpp */; };
@@ -77,7 +78,6 @@
 		94790DA714C0C46900B30798 /* netplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D4214C0C46900B30798 /* netplay.cpp */; };
 		94790DA814C0C46900B30798 /* obc1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D4414C0C46900B30798 /* obc1.cpp */; };
 		94790DA914C0C46900B30798 /* ppu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D4814C0C46900B30798 /* ppu.cpp */; };
-		94790DAA14C0C46900B30798 /* reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D4A14C0C46900B30798 /* reader.cpp */; };
 		94790DAB14C0C46900B30798 /* sa1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D4C14C0C46900B30798 /* sa1.cpp */; };
 		94790DAC14C0C46900B30798 /* sa1cpu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D4E14C0C46900B30798 /* sa1cpu.cpp */; };
 		94790DAE14C0C46900B30798 /* sdd1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D5214C0C46900B30798 /* sdd1.cpp */; };
@@ -146,6 +146,9 @@
 		826C1B1E0F420C2200FB9014 /* SNESGameCore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SNESGameCore.mm; sourceTree = "<group>"; };
 		828F16CA0F43A10000FD7321 /* APPL.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = APPL.icns; sourceTree = "<group>"; };
 		82AD85B50F41646E00DF0AE1 /* SNESOESupport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SNESOESupport.mm; sourceTree = "<group>"; };
+		87431C041B02F20700F82158 /* stream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stream.cpp; path = "snes9x-1.53-src/stream.cpp"; sourceTree = "<group>"; };
+		87431C051B02F20700F82158 /* stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream.h; path = "snes9x-1.53-src/stream.h"; sourceTree = "<group>"; };
+		87431C071B0309F700F82158 /* loadzip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = loadzip.cpp; path = "snes9x-1.53-src/loadzip.cpp"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* SNES9x.oecoreplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SNES9x.oecoreplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		942597D5151470C00074E3A3 /* OpenEmuBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEmuBase.framework; path = ../OpenEmu/build/Release/OpenEmuBase.framework; sourceTree = "<group>"; };
@@ -230,8 +233,6 @@
 		94790D4714C0C46900B30798 /* port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = port.h; path = "snes9x-1.53-src/port.h"; sourceTree = "<group>"; };
 		94790D4814C0C46900B30798 /* ppu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ppu.cpp; path = "snes9x-1.53-src/ppu.cpp"; sourceTree = "<group>"; };
 		94790D4914C0C46900B30798 /* ppu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ppu.h; path = "snes9x-1.53-src/ppu.h"; sourceTree = "<group>"; };
-		94790D4A14C0C46900B30798 /* reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reader.cpp; path = "snes9x-1.53-src/reader.cpp"; sourceTree = "<group>"; };
-		94790D4B14C0C46900B30798 /* reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reader.h; path = "snes9x-1.53-src/reader.h"; sourceTree = "<group>"; };
 		94790D4C14C0C46900B30798 /* sa1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sa1.cpp; path = "snes9x-1.53-src/sa1.cpp"; sourceTree = "<group>"; };
 		94790D4D14C0C46900B30798 /* sa1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sa1.h; path = "snes9x-1.53-src/sa1.h"; sourceTree = "<group>"; };
 		94790D4E14C0C46900B30798 /* sa1cpu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sa1cpu.cpp; path = "snes9x-1.53-src/sa1cpu.cpp"; sourceTree = "<group>"; };
@@ -413,6 +414,7 @@
 				94790D1914C0C46900B30798 /* gfx.h */,
 				94790D1A14C0C46900B30798 /* globals.cpp */,
 				94790D3814C0C46900B30798 /* language.h */,
+				87431C071B0309F700F82158 /* loadzip.cpp */,
 				94790D3A14C0C46900B30798 /* logger.cpp */,
 				94790D3B14C0C46900B30798 /* logger.h */,
 				94790D3C14C0C46900B30798 /* memmap.cpp */,
@@ -429,8 +431,6 @@
 				94790D4714C0C46900B30798 /* port.h */,
 				94790D4814C0C46900B30798 /* ppu.cpp */,
 				94790D4914C0C46900B30798 /* ppu.h */,
-				94790D4A14C0C46900B30798 /* reader.cpp */,
-				94790D4B14C0C46900B30798 /* reader.h */,
 				94790D4C14C0C46900B30798 /* sa1.cpp */,
 				94790D4D14C0C46900B30798 /* sa1.h */,
 				94790D4E14C0C46900B30798 /* sa1cpu.cpp */,
@@ -461,6 +461,8 @@
 				94790D6714C0C46900B30798 /* srtc.h */,
 				94790D6814C0C46900B30798 /* srtcemu.cpp */,
 				94790D6914C0C46900B30798 /* srtcemu.h */,
+				87431C041B02F20700F82158 /* stream.cpp */,
+				87431C051B02F20700F82158 /* stream.h */,
 				94790D6A14C0C46900B30798 /* tile.cpp */,
 				94790D6B14C0C46900B30798 /* tile.h */,
 			);
@@ -629,7 +631,7 @@
 				94790DA714C0C46900B30798 /* netplay.cpp in Sources */,
 				94790DA814C0C46900B30798 /* obc1.cpp in Sources */,
 				94790DA914C0C46900B30798 /* ppu.cpp in Sources */,
-				94790DAA14C0C46900B30798 /* reader.cpp in Sources */,
+				87431C061B02F20700F82158 /* stream.cpp in Sources */,
 				94790DAB14C0C46900B30798 /* sa1.cpp in Sources */,
 				94790DAC14C0C46900B30798 /* sa1cpu.cpp in Sources */,
 				94790DAE14C0C46900B30798 /* sdd1.cpp in Sources */,
