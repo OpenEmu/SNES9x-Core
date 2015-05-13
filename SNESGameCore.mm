@@ -783,6 +783,8 @@ static void FinalizeSamplesAudioCallback(void *)
     return 2;
 }
 
+#pragma mark - Save State
+
 - (BOOL)saveStateToFileAtPath: (NSString *) fileName
 {
     return S9xFreezeGame([fileName UTF8String]) ? YES : NO;
@@ -791,6 +793,52 @@ static void FinalizeSamplesAudioCallback(void *)
 - (BOOL)loadStateFromFileAtPath: (NSString *) fileName
 {
     return S9xUnfreezeGame([fileName UTF8String]) ? YES : NO;
+}
+
+- (NSData *)serializeStateWithError:(NSError **)outError
+{
+    size_t length = S9xFreezeSize();
+    void *bytes = malloc(length);
+
+    if(S9xFreezeGameMem((uint8_t*)bytes, length))
+    {
+        return [NSData dataWithBytesNoCopy:bytes length:length];
+    }
+    else
+    {
+        if(outError)
+        {
+            *outError = [NSError errorWithDomain:OEGameCoreErrorDomain
+                                            code:OEGameCoreCouldNotSaveStateError
+                                        userInfo:@{
+                                                   NSLocalizedDescriptionKey : @"Save state data could not be written",
+                                                   NSLocalizedRecoverySuggestionErrorKey : @"The emulator could not write the state data."
+                                                   }];
+        }
+
+        return nil;
+    }
+}
+
+- (BOOL)deserializeState:(NSData *)state withError:(NSError **)outError
+{
+    const uint8_t *stateBytes = (const uint8_t *)[state bytes];
+    unsigned int stateLength = [state length];
+    
+    if(S9xUnfreezeGameMem(stateBytes, stateLength) != SUCCESS)
+    {
+        NSError *error = [NSError errorWithDomain:OEGameCoreErrorDomain
+                                             code:OEGameCoreCouldNotLoadStateError
+                                         userInfo:@{
+                                                    NSLocalizedDescriptionKey : @"The save state data could not be read"
+                                                    }];
+        if(outError)
+        {
+            *outError = error;
+        }
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - Cheats
