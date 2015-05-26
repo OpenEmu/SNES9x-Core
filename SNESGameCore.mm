@@ -73,13 +73,11 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 {
     // TODO allow mouse tracking beyond screen? Fix Shien, Super Robot Taisen, Snoopy Concert
 
-    // Handle screen resolution changes and 4:3 correction
+    // Handle screen resolution changes and PAR correction
     if (IPPU.RenderedScreenWidth == 512)
-        S9xReportPointer(12, aPoint.x * 0.5, aPoint.y * 0.583333);
-    else if (IPPU.RenderedScreenWidth == 256 && IPPU.RenderedScreenHeight == 239)
-        S9xReportPointer(12, aPoint.x * 0.803347, aPoint.y);
+        S9xReportPointer(12, aPoint.x * 0.5, aPoint.y * 0.570312);
     else
-        S9xReportPointer(12, aPoint.x * 0.857143, aPoint.y);
+        S9xReportPointer(12, aPoint.x * 0.876712, aPoint.y);
 }
 
 - (oneway void)leftMouseDownAtPoint:(OEIntPoint)aPoint
@@ -695,6 +693,11 @@ static void FinalizeSamplesAudioCallback(void *)
 - (OEIntRect)screenRect
 {
     return OEIntRectMake(0, 0, IPPU.RenderedScreenWidth, IPPU.RenderedScreenHeight);
+}
+
+- (OEIntSize)aspectSize
+{
+    return OEIntSizeMake(256 * (8.0/7.0), IPPU.RenderedScreenHeight);
 }
 
 - (OEIntSize)bufferSize
