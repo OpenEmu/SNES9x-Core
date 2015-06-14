@@ -795,7 +795,11 @@ static void FinalizeSamplesAudioCallback(void *)
 
 - (BOOL)loadStateFromFileAtPath: (NSString *) fileName
 {
-    return S9xUnfreezeGame([fileName UTF8String]) ? YES : NO;
+    NSData *data = [NSData dataWithContentsOfFile:fileName options:0 error:nil];
+    if(data)
+        return [self deserializeState:data withError:nil];
+    else
+        return NO;
 }
 
 - (NSData *)serializeStateWithError:(NSError **)outError
