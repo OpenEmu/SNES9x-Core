@@ -143,12 +143,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 
 - (void)executeFrame
 {
-    [self executeFrameSkippingFrame:NO];
-}
-
-- (void)executeFrameSkippingFrame:(BOOL)skip
-{
-    IPPU.RenderThisFrame = !skip;
+    IPPU.RenderThisFrame = !self.shouldSkipFrame;
     S9xMainLoop();
 }
 
@@ -675,7 +670,7 @@ bool8 S9xOpenSoundDevice(void)
 
 static void FinalizeSamplesAudioCallback(void *)
 {
-    GET_CURRENT_AND_RETURN();
+    GET_CURRENT_OR_RETURN();
     
     S9xFinalizeSamples();
     int samples = S9xGetSampleCount();
