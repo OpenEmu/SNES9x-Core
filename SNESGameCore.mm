@@ -48,14 +48,24 @@
 
 @interface SNESGameCore () <OESNESSystemResponderClient>
 {
+    NSMutableDictionary *cheatList;
     UInt16        *soundBuffer;
     unsigned char *videoBuffer;
 }
 
 @end
 
-static __weak SNESGameCore *_current;
 @implementation SNESGameCore
+
+- (instancetype)init
+{
+    if (!(self = [super init]))
+        return nil;
+
+    cheatList = [NSMutableDictionary dictionary];
+
+    return self;
+}
 
 NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", @"X", @"Y", @"L", @"R", @"Start", @"Select", nil };
 
@@ -192,7 +202,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     if(!S9xInitSound(100, 0))
         NSLog(@"Couldn't init sound");
     
-    S9xSetSamplesAvailableCallback(FinalizeSamplesAudioCallback, NULL);
+    S9xSetSamplesAvailableCallback(FinalizeSamplesAudioCallback, (__bridge void *)self);
 
     Settings.NoPatch = true;
     Settings.BSXBootup = false;
@@ -668,14 +678,17 @@ bool8 S9xOpenSoundDevice(void)
 	return true;
 }
 
-static void FinalizeSamplesAudioCallback(void *)
+- (void)finalizeAudioSamples
 {
-    GET_CURRENT_OR_RETURN();
-    
     S9xFinalizeSamples();
     int samples = S9xGetSampleCount();
-    S9xMixSamples((uint8_t*)current->soundBuffer, samples);
-    [[current ringBufferAtIndex:0] write:current->soundBuffer maxLength:samples * 2];
+    S9xMixSamples((uint8_t*)soundBuffer, samples);
+    [[self ringBufferAtIndex:0] write:soundBuffer maxLength:samples * 2];
+}
+
+static void FinalizeSamplesAudioCallback(void *context)
+{
+    [(__bridge SNESGameCore *)context finalizeAudioSamples];
 }
 
 #pragma mark Video
@@ -735,18 +748,9 @@ static void FinalizeSamplesAudioCallback(void *)
     [super stopEmulation];
 }
 
-- (id)init
-{
-    if((self = [super init]))
-    {
-        _current = self;
-    }
-    
-    return self;
-}
-
 - (void)dealloc
 {
+    S9xSetSamplesAvailableCallback(NULL, NULL);
     free(videoBuffer);
     free(soundBuffer);
 }
@@ -783,74 +787,64 @@ static void FinalizeSamplesAudioCallback(void *)
 
 #pragma mark - Save State
 
-- (BOOL)saveStateToFileAtPath: (NSString *) fileName
+- (void)saveStateToFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL, NSError *))block
 {
-    return S9xFreezeGame([fileName UTF8String]) ? YES : NO;
+    block(S9xFreezeGame(fileName.fileSystemRepresentation) ? YES : NO, nil);
 }
 
-- (BOOL)loadStateFromFileAtPath: (NSString *) fileName
+- (void)loadStateFromFileAtPath:(NSString *)fileName completionHandler:(void (^)(BOOL, NSError *))block
 {
-    NSData *data = [NSData dataWithContentsOfFile:fileName options:0 error:nil];
-    if(data)
-        return [self deserializeState:data withError:nil];
-    else
-        return NO;
+    NSError *error;
+    NSData *data = [NSData dataWithContentsOfFile:fileName options:0 error:&error];
+    if (!data) {
+        block(NO, error);
+        return;
+    }
+
+    block([self deserializeState:data withError:&error], error);
 }
 
 - (NSData *)serializeStateWithError:(NSError **)outError
 {
-    size_t length = S9xFreezeSize();
-    void *bytes = malloc(length);
+    uint32 length = S9xFreezeSize();
+    NSMutableData *data = [NSMutableData dataWithLength:length];
 
-    if(S9xFreezeGameMem((uint8_t*)bytes, length))
-    {
-        return [NSData dataWithBytesNoCopy:bytes length:length];
-    }
-    else
-    {
-        if(outError)
-        {
-            *outError = [NSError errorWithDomain:OEGameCoreErrorDomain
-                                            code:OEGameCoreCouldNotSaveStateError
-                                        userInfo:@{
-                                                   NSLocalizedDescriptionKey : @"Save state data could not be written",
-                                                   NSLocalizedRecoverySuggestionErrorKey : @"The emulator could not write the state data."
-                                                   }];
-        }
+    if(S9xFreezeGameMem((uint8_t*)data.mutableBytes, length))
+        return data;
 
-        return nil;
+    if(outError) {
+        *outError = [NSError errorWithDomain:OEGameCoreErrorDomain code:OEGameCoreCouldNotSaveStateError userInfo:@{
+            NSLocalizedDescriptionKey : @"Save state data could not be written",
+            NSLocalizedRecoverySuggestionErrorKey : @"The emulator could not write the state data."
+        }];
     }
+
+    return nil;
 }
 
 - (BOOL)deserializeState:(NSData *)state withError:(NSError **)outError
 {
     const uint8_t *stateBytes = (const uint8_t *)[state bytes];
-    unsigned int stateLength = [state length];
-    
-    if(S9xUnfreezeGameMem(stateBytes, stateLength) != SUCCESS)
-    {
-        NSError *error = [NSError errorWithDomain:OEGameCoreErrorDomain
-                                             code:OEGameCoreCouldNotLoadStateError
-                                         userInfo:@{
-                                                    NSLocalizedDescriptionKey : @"The save state data could not be read"
-                                                    }];
-        if(outError)
-        {
-            *outError = error;
-        }
-        return NO;
+    uint32 stateLength = (uint32)[state length];
+
+    if(S9xUnfreezeGameMem(stateBytes, stateLength) == SUCCESS)
+        return YES;
+
+    if(outError) {
+        *outError = [NSError errorWithDomain:OEGameCoreErrorDomain code:OEGameCoreCouldNotLoadStateError userInfo:@{
+            NSLocalizedDescriptionKey : @"The save state data could not be read"
+        }];
     }
-    return YES;
+
+    return NO;
 }
 
 #pragma mark - Cheats
 
-NSMutableDictionary *cheatList = [[NSMutableDictionary alloc] init];
-
 - (void)setCheat:(NSString *)code setType:(NSString *)type setEnabled:(BOOL)enabled
 {
     if (enabled)
-        [cheatList setValue:@YES forKey:code];
+        cheatList[code] = @YES;
     else
         [cheatList removeObjectForKey:code];
     
@@ -867,8 +861,7 @@ NSMutableDictionary *cheatList = [[NSMutableDictionary alloc] init];
             multipleCodes = [key componentsSeparatedByString:@"+"];
             for (NSString *singleCode in multipleCodes) {
                 // Sanitize for PAR codes that might contain colons
-                const char *cheatCode = [[singleCode stringByReplacingOccurrencesOfString:@":"
-                                                                               withString:@""] UTF8String];
+                const char *cheatCode = [[singleCode stringByReplacingOccurrencesOfString:@":" withString:@""] UTF8String];
                 uint32		address;
                 uint8		byte;
                 
