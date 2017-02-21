@@ -50,7 +50,7 @@
 {
     NSMutableDictionary *cheatList;
     UInt16        *soundBuffer;
-    unsigned char *videoBuffer;
+    unsigned char *indirectVideoBuffer;
 }
 
 @end
@@ -177,12 +177,10 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     GFX.InfoStringTimeout           = 0;
     Settings.DontSaveOopsSnapshot   = true;
 
-    if(videoBuffer) free(videoBuffer);
-
-    videoBuffer = (unsigned char *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
+    indirectVideoBuffer = (unsigned char *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
 
     GFX.Pitch = 512 * 2;
-    GFX.Screen = (short unsigned int *)videoBuffer;
+    GFX.Screen = (short unsigned int *)indirectVideoBuffer;
 
     S9xUnmapAllControls();
 
@@ -693,9 +691,9 @@ static void FinalizeSamplesAudioCallback(void *context)
 
 #pragma mark Video
 
-- (const void *)videoBuffer
+- (const void *)getVideoBufferWithHint:(void *)hint
 {
-    return GFX.Screen;
+    return GFX.Screen = (uint16_t*)(hint ?: indirectVideoBuffer);
 }
 
 - (OEIntRect)screenRect
@@ -751,7 +749,7 @@ static void FinalizeSamplesAudioCallback(void *context)
 - (void)dealloc
 {
     S9xSetSamplesAvailableCallback(NULL, NULL);
-    free(videoBuffer);
+    free(indirectVideoBuffer);
     free(soundBuffer);
 }
 
@@ -763,11 +761,6 @@ static void FinalizeSamplesAudioCallback(void *context)
 - (GLenum)pixelType
 {
     return GL_UNSIGNED_SHORT_5_6_5;
-}
-
-- (GLenum)internalPixelFormat
-{
-    return GL_RGB5;
 }
 
 - (double)audioSampleRate
