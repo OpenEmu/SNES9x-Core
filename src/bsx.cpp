@@ -22,7 +22,7 @@
 
   (c) Copyright 2006 - 2007  nitsuja
 
-  (c) Copyright 2009 - 2011  BearOso,
+  (c) Copyright 2009 - 2016  BearOso,
                              OV2
 
 
@@ -118,6 +118,9 @@
   Sound emulator code used in 1.52+
   (c) Copyright 2004 - 2007  Shay Green (gblargg@gmail.com)
 
+  S-SMP emulator code used in 1.54+
+  (c) Copyright 2016         byuu
+
   SH assembler code partly based on x86 assembler code
   (c) Copyright 2002 - 2004  Marcus Comstedt (marcus@mc.pp.se)
 
@@ -131,7 +134,7 @@
   (c) Copyright 2006 - 2007  Shay Green
 
   GTK+ GUI code
-  (c) Copyright 2004 - 2011  BearOso
+  (c) Copyright 2004 - 2016  BearOso
 
   Win32 GUI code
   (c) Copyright 2003 - 2006  blip,
@@ -139,7 +142,7 @@
                              Matthew Kendora,
                              Nach,
                              nitsuja
-  (c) Copyright 2009 - 2011  OV2
+  (c) Copyright 2009 - 2016  OV2
 
   Mac OS GUI code
   (c) Copyright 1998 - 2001  John Stiles
@@ -358,12 +361,10 @@ static void BSX_Map_MMC (void)
 
 static void BSX_Map_FlashIO (void)
 {
-	int	c;
-
 	if (BSX.MMC[0x0C] || BSX.MMC[0x0D])
 	{
 		// Bank C0:0000, 2AAA, 5555, FF00-FF1F
-		for (c = 0; c < 16; c++)
+		for (int c = 0; c < 16; c++)
 		{
 			Map[c + 0xC00] = (uint8 *) MAP_BSX;
 			BlockIsRAM[c + 0xC00] = TRUE;
@@ -833,7 +834,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 
 		// Data register? (r/w)
 		case 0x2192:
-			t = BSX.PPU[0x2192 - BSXPPUBASE];
+			// t = BSX.PPU[0x2192 - BSXPPUBASE];
 
 			// test
 			t = BSX.test2192[BSX.out_index++];
@@ -1023,11 +1024,19 @@ static bool8 BSX_LoadBIOS (void)
 	return (r);
 }
 
+static bool8 is_BSX_BIOS (const uint8 *data, uint32 size)
+{
+	if (size == BIOS_SIZE && strncmp((char *) (data + 0x7FC0), "Satellaview BS-X     ", 21) == 0)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
 void S9xInitBSX (void)
 {
 	Settings.BS = FALSE;
 
-	if (!memcmp(&Memory.ROM[0x7FC0], "Satellaview BS-X     ", 21))
+    if (is_BSX_BIOS(Memory.ROM,Memory.CalculatedSize))
 	{
 		// BS-X itself
 
@@ -1074,7 +1083,7 @@ void S9xInitBSX (void)
 
 			BSX.bootup = Settings.BSXBootup;
 
-			if (!BSX_LoadBIOS())
+			if (!BSX_LoadBIOS() && !is_BSX_BIOS(BIOSROM,BIOS_SIZE))
 			{
 				BSX.bootup = FALSE;
 				memset(BIOSROM, 0, BIOS_SIZE);

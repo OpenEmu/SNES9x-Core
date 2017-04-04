@@ -15,6 +15,7 @@
  * or in connection with the use or performance of this software.
  *****/
 
+
 #ifdef _SPC7110EMU_CPP_
 
 uint8 SPC7110Decomp::read() {

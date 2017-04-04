@@ -29,15 +29,14 @@
 #import <OpenEmuBase/OERingBuffer.h>
 #import <OpenGL/gl.h>
 
+#include "snes9x.h"
 #include "memmap.h"
 #include "pixform.h"
 #include "gfx.h"
 #include "display.h"
 #include "ppu.h"
-#include "apu.h"
+#include "apu/apu.h"
 #include "controls.h"
-#include "snes9x.h"
-#include "movie.h"
 #include "snapshot.h"
 #include "screenshot.h"
 #include "cheats.h"

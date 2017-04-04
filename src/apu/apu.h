@@ -22,7 +22,7 @@
 
   (c) Copyright 2006 - 2007  nitsuja
 
-  (c) Copyright 2009 - 2011  BearOso,
+  (c) Copyright 2009 - 2016  BearOso,
                              OV2
 
 
@@ -118,6 +118,9 @@
   Sound emulator code used in 1.52+
   (c) Copyright 2004 - 2007  Shay Green (gblargg@gmail.com)
 
+  S-SMP emulator code used in 1.54+
+  (c) Copyright 2016         byuu
+
   SH assembler code partly based on x86 assembler code
   (c) Copyright 2002 - 2004  Marcus Comstedt (marcus@mc.pp.se)
 
@@ -131,7 +134,7 @@
   (c) Copyright 2006 - 2007  Shay Green
 
   GTK+ GUI code
-  (c) Copyright 2004 - 2011  BearOso
+  (c) Copyright 2004 - 2016  BearOso
 
   Win32 GUI code
   (c) Copyright 2003 - 2006  blip,
@@ -139,7 +142,7 @@
                              Matthew Kendora,
                              Nach,
                              nitsuja
-  (c) Copyright 2009 - 2011  OV2
+  (c) Copyright 2009 - 2016  OV2
 
   Mac OS GUI code
   (c) Copyright 1998 - 2001  John Stiles
@@ -180,11 +183,11 @@
 #define _APU_H_
 
 #include "snes9x.h"
-#include "SNES_SPC.h"
 
 typedef void (*apu_callback) (void *);
 
-#define SPC_SAVE_STATE_BLOCK_SIZE	(SNES_SPC::state_size + 8)
+#define SPC_SAVE_STATE_BLOCK_SIZE (1024 * 65)
+#define SPC_FILE_SIZE             (66048)
 
 bool8 S9xInitAPU (void);
 void S9xDeinitAPU (void);
@@ -198,8 +201,10 @@ void S9xAPUSetReferenceTime (int32);
 void S9xAPUTimingSetSpeedup (int);
 void S9xAPUAllowTimeOverflow (bool);
 void S9xAPULoadState (uint8 *);
+void S9xAPULoadBlarggState(uint8 *oldblock);
 void S9xAPUSaveState (uint8 *);
 void S9xDumpSPCSnapshot (void);
+bool8 S9xSPCDump (const char *);
 
 bool8 S9xInitSound (int, int);
 bool8 S9xOpenSoundDevice (void);
@@ -213,7 +218,5 @@ void S9xFinalizeSamples (void);
 void S9xClearSamples (void);
 bool8 S9xMixSamples (uint8 *, int);
 void S9xSetSamplesAvailableCallback (apu_callback, void *);
-
-extern SNES_SPC	*spc_core;
 
 #endif

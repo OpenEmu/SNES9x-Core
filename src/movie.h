@@ -22,7 +22,7 @@
 
   (c) Copyright 2006 - 2007  nitsuja
 
-  (c) Copyright 2009 - 2011  BearOso,
+  (c) Copyright 2009 - 2016  BearOso,
                              OV2
 
 
@@ -118,6 +118,9 @@
   Sound emulator code used in 1.52+
   (c) Copyright 2004 - 2007  Shay Green (gblargg@gmail.com)
 
+  S-SMP emulator code used in 1.54+
+  (c) Copyright 2016         byuu
+
   SH assembler code partly based on x86 assembler code
   (c) Copyright 2002 - 2004  Marcus Comstedt (marcus@mc.pp.se)
 
@@ -131,7 +134,7 @@
   (c) Copyright 2006 - 2007  Shay Green
 
   GTK+ GUI code
-  (c) Copyright 2004 - 2011  BearOso
+  (c) Copyright 2004 - 2016  BearOso
 
   Win32 GUI code
   (c) Copyright 2003 - 2006  blip,
@@ -139,7 +142,7 @@
                              Matthew Kendora,
                              Nach,
                              nitsuja
-  (c) Copyright 2009 - 2011  OV2
+  (c) Copyright 2009 - 2016  OV2
 
   Mac OS GUI code
   (c) Copyright 1998 - 2001  John Stiles
@@ -185,10 +188,8 @@
 #define MOVIE_OPT_NOSAVEDATA		(1 << 2)
 #define MOVIE_SYNC_DATA_EXISTS		0x01
 #define MOVIE_SYNC_OBSOLETE			0x02
-#define MOVIE_SYNC_LEFTRIGHT		0x04
 #define MOVIE_SYNC_VOLUMEENVX		0x08
 #define MOVIE_SYNC_FAKEMUTE			0x10
-#define MOVIE_SYNC_SYNCSOUND		0x20
 #define MOVIE_SYNC_HASROMINFO		0x40
 #define MOVIE_SYNC_NOCPUSHUTDOWN	0x80
 #define MOVIE_MAX_METADATA			512

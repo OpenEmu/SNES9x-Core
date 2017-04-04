@@ -22,7 +22,7 @@
 
   (c) Copyright 2006 - 2007  nitsuja
 
-  (c) Copyright 2009 - 2011  BearOso,
+  (c) Copyright 2009 - 2016  BearOso,
                              OV2
 
 
@@ -118,6 +118,9 @@
   Sound emulator code used in 1.52+
   (c) Copyright 2004 - 2007  Shay Green (gblargg@gmail.com)
 
+  S-SMP emulator code used in 1.54+
+  (c) Copyright 2016         byuu
+
   SH assembler code partly based on x86 assembler code
   (c) Copyright 2002 - 2004  Marcus Comstedt (marcus@mc.pp.se)
 
@@ -131,7 +134,7 @@
   (c) Copyright 2006 - 2007  Shay Green
 
   GTK+ GUI code
-  (c) Copyright 2004 - 2011  BearOso
+  (c) Copyright 2004 - 2016  BearOso
 
   Win32 GUI code
   (c) Copyright 2003 - 2006  blip,
@@ -139,7 +142,7 @@
                              Matthew Kendora,
                              Nach,
                              nitsuja
-  (c) Copyright 2009 - 2011  OV2
+  (c) Copyright 2009 - 2016  OV2
 
   Mac OS GUI code
   (c) Copyright 1998 - 2001  John Stiles
@@ -187,6 +190,8 @@
 #ifdef JMA_SUPPORT
 #include "jma/s9x-jma.h"
 #endif
+
+#include <ctype.h>
 
 #include "snes9x.h"
 #include "memmap.h"
@@ -1100,26 +1105,26 @@ bool8 CMemory::Init (void)
 		return (FALSE);
     }
 
-	ZeroMemory(RAM,  0x20000);
-	ZeroMemory(SRAM, 0x20000);
-	ZeroMemory(VRAM, 0x10000);
-	ZeroMemory(ROM,  MAX_ROM_SIZE + 0x200 + 0x8000);
+	memset(RAM, 0,  0x20000);
+	memset(SRAM, 0, 0x20000);
+	memset(VRAM, 0, 0x10000);
+	memset(ROM, 0,  MAX_ROM_SIZE + 0x200 + 0x8000);
 
-	ZeroMemory(IPPU.TileCache[TILE_2BIT],       MAX_2BIT_TILES * 64);
-	ZeroMemory(IPPU.TileCache[TILE_4BIT],       MAX_4BIT_TILES * 64);
-	ZeroMemory(IPPU.TileCache[TILE_8BIT],       MAX_8BIT_TILES * 64);
-	ZeroMemory(IPPU.TileCache[TILE_2BIT_EVEN],  MAX_2BIT_TILES * 64);
-	ZeroMemory(IPPU.TileCache[TILE_2BIT_ODD],   MAX_2BIT_TILES * 64);
-	ZeroMemory(IPPU.TileCache[TILE_4BIT_EVEN],  MAX_4BIT_TILES * 64);
-	ZeroMemory(IPPU.TileCache[TILE_4BIT_ODD],   MAX_4BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_2BIT], 0,       MAX_2BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_4BIT], 0,       MAX_4BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_8BIT], 0,       MAX_8BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_2BIT_EVEN], 0,  MAX_2BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_2BIT_ODD], 0,   MAX_2BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_4BIT_EVEN], 0,  MAX_4BIT_TILES * 64);
+	memset(IPPU.TileCache[TILE_4BIT_ODD], 0,   MAX_4BIT_TILES * 64);
 
-	ZeroMemory(IPPU.TileCached[TILE_2BIT],      MAX_2BIT_TILES);
-	ZeroMemory(IPPU.TileCached[TILE_4BIT],      MAX_4BIT_TILES);
-	ZeroMemory(IPPU.TileCached[TILE_8BIT],      MAX_8BIT_TILES);
-	ZeroMemory(IPPU.TileCached[TILE_2BIT_EVEN], MAX_2BIT_TILES);
-	ZeroMemory(IPPU.TileCached[TILE_2BIT_ODD],  MAX_2BIT_TILES);
-	ZeroMemory(IPPU.TileCached[TILE_4BIT_EVEN], MAX_4BIT_TILES);
-	ZeroMemory(IPPU.TileCached[TILE_4BIT_ODD],  MAX_4BIT_TILES);
+	memset(IPPU.TileCached[TILE_2BIT], 0,      MAX_2BIT_TILES);
+	memset(IPPU.TileCached[TILE_4BIT], 0,      MAX_4BIT_TILES);
+	memset(IPPU.TileCached[TILE_8BIT], 0,      MAX_8BIT_TILES);
+	memset(IPPU.TileCached[TILE_2BIT_EVEN], 0, MAX_2BIT_TILES);
+	memset(IPPU.TileCached[TILE_2BIT_ODD], 0,  MAX_2BIT_TILES);
+	memset(IPPU.TileCached[TILE_4BIT_EVEN], 0, MAX_4BIT_TILES);
+	memset(IPPU.TileCached[TILE_4BIT_ODD], 0,  MAX_4BIT_TILES);
 
 	// FillRAM uses first 32K of ROM image area, otherwise space just
 	// wasted. Might be read by the SuperFX code.
@@ -1520,7 +1525,7 @@ bool8 CMemory::LoadROMMem (const uint8 *source, uint32 sourceSize)
     do
     {
         memset(ROM,0, MAX_ROM_SIZE);
-	    memset(&Multi, 0,sizeof(Multi));
+        memset(&Multi, 0,sizeof(Multi));
         memcpy(ROM,source,sourceSize);
     }
     while(!LoadROMInt(sourceSize));
@@ -1538,14 +1543,14 @@ bool8 CMemory::LoadROM (const char *filename)
     do
     {
         memset(ROM,0, MAX_ROM_SIZE);
-	    memset(&Multi, 0,sizeof(Multi));
+        memset(&Multi, 0,sizeof(Multi));
         totalFileSize = FileLoader(ROM, filename, MAX_ROM_SIZE);
 
         if (!totalFileSize)
-		    return (FALSE);
+            return (FALSE);
 
         if (!Settings.NoPatch)
-		    CheckForAnyPatch(filename, HeaderCount != 0, totalFileSize);
+            CheckForAnyPatch(filename, HeaderCount != 0, totalFileSize);
     }
     while(!LoadROMInt(totalFileSize));
 
@@ -1751,7 +1756,7 @@ bool8 CMemory::LoadROMInt (int32 ROMfillSize)
 		LastRomFilename[PATH_MAX] = 0;
 	}
 
-	ZeroMemory(&SNESGameFixes, sizeof(SNESGameFixes));
+	memset(&SNESGameFixes, 0, sizeof(SNESGameFixes));
 	SNESGameFixes.SRAMInitialValue = 0x60;
 
 	S9xLoadCheatFile(S9xGetFilename(".cht", CHEAT_DIR));
@@ -1771,8 +1776,8 @@ bool8 CMemory::LoadMultiCartMem (const uint8 *sourceA, uint32 sourceASize,
                                  const uint8 *bios, uint32 biosSize)
 {
     uint32 offset = 0;
-    ZeroMemory(ROM, MAX_ROM_SIZE);
-	ZeroMemory(&Multi, sizeof(Multi));
+    memset(ROM, 0, MAX_ROM_SIZE);
+	memset(&Multi, 0, sizeof(Multi));
 
     if(bios) {
         if(!is_SufamiTurbo_BIOS(bios,biosSize))
@@ -1803,8 +1808,8 @@ bool8 CMemory::LoadMultiCartMem (const uint8 *sourceA, uint32 sourceASize,
 
 bool8 CMemory::LoadMultiCart (const char *cartA, const char *cartB)
 {
-    ZeroMemory(ROM, MAX_ROM_SIZE);
-	ZeroMemory(&Multi, sizeof(Multi));
+    memset(ROM, 0, MAX_ROM_SIZE);
+	memset(&Multi, 0, sizeof(Multi));
 
 	Settings.DisplayColor = BUILD_PIXEL(31, 31, 31);
 	SET_UI_COLOR(255, 255, 255);
@@ -1866,9 +1871,9 @@ bool8 CMemory::LoadMultiCartInt ()
     if(Multi.cartType == 4 && Multi.cartOffsetA == 0) { // try to load bios from file
         Multi.cartOffsetA = 0x40000;
         if(Multi.cartSizeA)
-            memmove(ROM + Multi.cartOffsetA,ROM,Multi.cartOffsetB - Multi.cartOffsetA);
-        else // clear cart A so the bios can detect that it's not present
-            memset(ROM,0,Multi.cartOffsetB);
+            memmove(ROM + Multi.cartOffsetA, ROM, Multi.cartSizeA + Multi.cartSizeB);
+        else if(Multi.cartOffsetB) // clear cart A so the bios can detect that it's not present
+            memset(ROM, 0, Multi.cartOffsetB);
         
         FILE	*fp;
 	    size_t	size;
@@ -1912,7 +1917,7 @@ bool8 CMemory::LoadMultiCartInt ()
 
 	if (!r)
 	{
-		ZeroMemory(&Multi, sizeof(Multi));
+		memset(&Multi, 0, sizeof(Multi));
 		return (FALSE);
 	}
 
@@ -1922,7 +1927,7 @@ bool8 CMemory::LoadMultiCartInt ()
 	if (Multi.cartSizeB)
 		strcpy(ROMFilename, Multi.fileNameB);
 
-	ZeroMemory(&SNESGameFixes, sizeof(SNESGameFixes));
+	memset(&SNESGameFixes, 0, sizeof(SNESGameFixes));
 	SNESGameFixes.SRAMInitialValue = 0x60;
 
 	S9xLoadCheatFile(S9xGetFilename(".cht", CHEAT_DIR));
@@ -2167,9 +2172,6 @@ bool8 CMemory::SaveSRAM (const char *filename)
 			size_t	ignore;
 			ignore = fwrite((char *) Multi.sramB, size, 1, file);
 			fclose(file);
-		#ifdef __linux
-			ignore = chown(name, getuid(), getgid());
-		#endif
 		}
 
 		strcpy(ROMFilename, temp);
@@ -2187,9 +2189,6 @@ bool8 CMemory::SaveSRAM (const char *filename)
 			size_t	ignore;
 			ignore = fwrite((char *) SRAM, size, 1, file);
 			fclose(file);
-		#ifdef __linux
-			ignore = chown(sramName, getuid(), getgid());
-		#endif
 
 			if (Settings.SRTC || Settings.SPC7110RTC)
 				SaveSRTC();
@@ -2352,7 +2351,7 @@ void CMemory::InitROM (void)
 	Settings.SETA = 0;
 	Settings.SRTC = FALSE;
 	Settings.BS = FALSE;
-	
+
 	SuperFX.nRomBanks = CalculatedSize >> 15;
 
 	//// Parse ROM header and read ROM informatoin
@@ -3352,7 +3351,7 @@ void CMemory::Map_SPC7110HiROMMap (void)
 	map_System();
 
 	map_index(0x00, 0x00, 0x6000, 0x7fff, MAP_HIROM_SRAM, MAP_TYPE_RAM);
-	map_hirom(0x00, 0x0f, 0x8000, 0xffff, CalculatedSize);	
+	map_hirom(0x00, 0x0f, 0x8000, 0xffff, CalculatedSize);
 	map_index(0x30, 0x30, 0x6000, 0x7fff, MAP_HIROM_SRAM, MAP_TYPE_RAM);
 	map_index(0x50, 0x50, 0x0000, 0xffff, MAP_SPC7110_DRAM, MAP_TYPE_ROM);
 	map_hirom(0x80, 0x8f, 0x8000, 0xffff, CalculatedSize);
@@ -3379,7 +3378,7 @@ uint16 CMemory::checksum_calc_sum (uint8 *data, uint32 length)
 uint16 CMemory::checksum_mirror_sum (uint8 *start, uint32 &length, uint32 mask)
 {
 	// from NSRT
-	while (!(length & mask))
+	while (!(length & mask) && mask)
 		mask >>= 1;
 
 	uint16	part1 = checksum_calc_sum(start, mask);
@@ -3647,14 +3646,13 @@ void CMemory::ApplyROMFixes (void)
 	//// APU timing hacks :(
 
 	Timings.APUSpeedup = 0;
-	Timings.APUAllowTimeOverflow = FALSE;
 
 	if (!Settings.DisableGameSpecificHacks)
 	{
 		if (match_id("AVCJ"))                                      // Rendering Ranger R2
-			Timings.APUSpeedup = 4;
+			Timings.APUSpeedup = 2;
 
-		if (match_na("GAIA GENSOUKI 1 JPN")                     || // Gaia Gensouki
+/*		if (match_na("GAIA GENSOUKI 1 JPN")                     || // Gaia Gensouki
 			match_id("JG  ")                                    || // Illusion of Gaia
 			match_id("CQ  ")                                    || // Stunt Race FX
 			match_na("SOULBLADER - 1")                          || // Soul Blader
@@ -3688,22 +3686,10 @@ void CMemory::ApplyROMFixes (void)
 			match_nn("Parlor")                                  || // Parlor mini/2/3/4/5/6/7, Parlor Parlor!/2/3/4/5
 			match_na("HEIWA Parlor!Mini8")                      || // Parlor mini 8
 			match_nn("SANKYO Fever! \xCC\xA8\xB0\xCA\xDE\xB0!"))   // SANKYO Fever! Fever!
-			Timings.APUSpeedup = 1;
-
-		if (match_na ("EARTHWORM JIM 2")						|| // Earthworm Jim 2
-			match_na ("NBA Hangtime")							|| // NBA Hang Time
-			match_na ("MSPACMAN")								|| // Ms Pacman
-			match_na ("THE MASK")								|| // The Mask
-			match_na ("PRIMAL RAGE")							|| // Primal Rage
-			match_na ("PORKY PIGS HAUNTED")						|| // Porky Pig's Haunted Holiday
-			match_na ("Big Sky Trooper")						|| // Big Sky Trooper
-			match_id ("A35")									|| // Mechwarrior 3050 / Battle Tech 3050
-			match_na ("DOOM TROOPERS"))							   // Doom Troopers
-			Timings.APUAllowTimeOverflow = TRUE;
+			Timings.APUSpeedup = 1; */
 	}
 
 	S9xAPUTimingSetSpeedup(Timings.APUSpeedup);
-	S9xAPUAllowTimeOverflow(Timings.APUAllowTimeOverflow);
 
 	//// Other timing hacks :(
 
