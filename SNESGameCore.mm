@@ -42,7 +42,7 @@
 #include "cheats.h"
 #import "OESNESSystemResponderClient.h"
 
-#define SAMPLERATE      32000
+#define SAMPLERATE      32040
 #define SIZESOUNDBUFFER SAMPLERATE / 50 * 4
 
 @interface SNESGameCore () <OESNESSystemResponderClient>
@@ -167,7 +167,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     Settings.SixteenBitSound        = true;
     Settings.Stereo                 = true;
     Settings.SoundPlaybackRate      = SAMPLERATE;
-    Settings.SoundInputRate         = 32000;
+    Settings.SoundInputRate         = 32040;
     Settings.SupportHiRes           = true;
     Settings.Transparency           = true;
     Settings.HDMATimingHack         = 100;
@@ -764,7 +764,7 @@ static void FinalizeSamplesAudioCallback(void *context)
 
 - (double)audioSampleRate
 {
-    return 32040.5;
+    return 32040;
 }
 
 - (NSTimeInterval)frameInterval

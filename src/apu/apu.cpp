@@ -417,8 +417,8 @@ bool8 S9xInitSound (int buffer_ms, int lag_ms)
 	// buffer_ms : buffer size given in millisecond
 	// lag_ms    : allowable time-lag given in millisecond
 
-	int	sample_count     = buffer_ms * 32000 / 1000;
-	int	lag_sample_count = lag_ms    * 32000 / 1000;
+	int	sample_count     = buffer_ms * 32040 / 1000;
+	int	lag_sample_count = lag_ms    * 32040 / 1000;
 
 	spc::lag_master = lag_sample_count;
 	if (Settings.Stereo)
