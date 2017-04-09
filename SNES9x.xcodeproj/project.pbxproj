@@ -19,19 +19,6 @@
 			name = "Build & Install SNES9x";
 			productName = "Build & Install";
 		};
-		82CAFD4C0FEDD6A200CCDC7E /* Distribution */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 82CAFD630FEDD6D100CCDC7E /* Build configuration list for PBXAggregateTarget "Distribution" */;
-			buildPhases = (
-				82CAFD620FEDD6D100CCDC7E /* CopyFiles */,
-				82CAFD4B0FEDD6A200CCDC7E /* ShellScript */,
-			);
-			dependencies = (
-				82CAFD500FEDD6A600CCDC7E /* PBXTargetDependency */,
-			);
-			name = Distribution;
-			productName = Distribution;
-		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -102,13 +89,6 @@
 			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = SNES9x;
 		};
-		82CAFD4F0FEDD6A600CCDC7E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
-			remoteInfo = SNES9x;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -117,15 +97,6 @@
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		82CAFD620FEDD6D100CCDC7E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 16;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -641,7 +612,6 @@
 			targets = (
 				8D5B49AC048680CD000E48DA /* SNES9x */,
 				826C1BAA0F42306E00FB9014 /* Build & Install SNES9x */,
-				82CAFD4C0FEDD6A200CCDC7E /* Distribution */,
 			);
 		};
 /* End PBXProject section */
@@ -671,19 +641,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p \"$USER_LIBRARY_DIR/Application Support/OpenEmu/Cores\"\nrm -rf \"$USER_LIBRARY_DIR/Application Support/OpenEmu/Cores/$PROJECT_NAME.oecoreplugin\"{,.dSYM}\ncp -rf \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.oecoreplugin\"{,.dSYM} \"$USER_LIBRARY_DIR/Application Support/OpenEmu/Cores/\"\n";
-		};
-		82CAFD4B0FEDD6A200CCDC7E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = /usr/bin/openemu_rb_automation.rb;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -754,11 +711,6 @@
 			isa = PBXTargetDependency;
 			target = 8D5B49AC048680CD000E48DA /* SNES9x */;
 			targetProxy = 826C1BAD0F42307900FB9014 /* PBXContainerItemProxy */;
-		};
-		82CAFD500FEDD6A600CCDC7E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D5B49AC048680CD000E48DA /* SNES9x */;
-			targetProxy = 82CAFD4F0FEDD6A600CCDC7E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -926,37 +878,6 @@
 			};
 			name = Release;
 		};
-		82CAFD4D0FEDD6A200CCDC7E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = "\"$(USER_LIBRARY_DIR)/Application Support/OpenEmu/Cores\"";
-				PRODUCT_NAME = Distribution;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		82CAFD4E0FEDD6A200CCDC7E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				INSTALL_PATH = "\"$(USER_LIBRARY_DIR)/Application Support/OpenEmu/Cores\"";
-				OTHER_CFLAGS = (
-					"-DUNZIP_SUPPORT",
-					"-D__MACOSX__",
-					"-DJMA_SUPPORT",
-				);
-				PRODUCT_NAME = Distribution;
-				SKIP_INSTALL = YES;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -983,15 +904,6 @@
 			buildConfigurations = (
 				826C1BAB0F42306E00FB9014 /* Debug */,
 				826C1BAC0F42306E00FB9014 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		82CAFD630FEDD6D100CCDC7E /* Build configuration list for PBXAggregateTarget "Distribution" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				82CAFD4D0FEDD6A200CCDC7E /* Debug */,
-				82CAFD4E0FEDD6A200CCDC7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
