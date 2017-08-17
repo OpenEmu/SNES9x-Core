@@ -204,7 +204,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     Settings.NoPatch = true;
     Settings.BSXBootup = false;
 
-    if(Memory.LoadROM([path UTF8String]))
+    if(Memory.LoadROM(path.fileSystemRepresentation))
     {
         NSString *path = [NSString stringWithUTF8String:Memory.ROMFilename];
         NSString *extensionlessFilename = [[path lastPathComponent] stringByDeletingPathExtension];
@@ -217,7 +217,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
 
             NSString *filePath = [batterySavesDirectory stringByAppendingPathComponent:[extensionlessFilename stringByAppendingPathExtension:@"sav"]];
 
-            Memory.LoadSRAM([filePath UTF8String]);
+            Memory.LoadSRAM(filePath.fileSystemRepresentation);
         }
 
         NSString *cartCRC32 = [NSString stringWithFormat:@"%08x", Memory.ROMCRC32];
@@ -739,7 +739,7 @@ static void FinalizeSamplesAudioCallback(void *context)
 
         NSString *filePath = [batterySavesDirectory stringByAppendingPathComponent:[extensionlessFilename stringByAppendingPathExtension:@"sav"]];
 
-        Memory.SaveSRAM([filePath UTF8String]);
+        Memory.SaveSRAM(filePath.fileSystemRepresentation);
     }
 
     [super stopEmulation];
