@@ -29,6 +29,7 @@
 		8725B0BA1E933E1E00F68CA5 /* SPC_DSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8725B0911E931ED600F68CA5 /* SPC_DSP.cpp */; };
 		8725B0BB1E933E2B00F68CA5 /* smp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8725B0B31E931ED600F68CA5 /* smp.cpp */; };
 		8725B0BC1E933E2D00F68CA5 /* smp_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8725B0B51E931ED600F68CA5 /* smp_state.cpp */; };
+		8741B3AC1FC9361100A95A00 /* msu1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8741B3AA1FC9361000A95A00 /* msu1.cpp */; };
 		87431C061B02F20700F82158 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87431C041B02F20700F82158 /* stream.cpp */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
@@ -157,6 +158,8 @@
 		8725B0B51E931ED600F68CA5 /* smp_state.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = smp_state.cpp; sourceTree = "<group>"; };
 		8725B0B61E931ED600F68CA5 /* timing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = timing.cpp; sourceTree = "<group>"; };
 		8725B0B81E931ED600F68CA5 /* snes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = snes.hpp; sourceTree = "<group>"; };
+		8741B3AA1FC9361000A95A00 /* msu1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = msu1.cpp; path = src/msu1.cpp; sourceTree = "<group>"; };
+		8741B3AB1FC9361000A95A00 /* msu1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = msu1.h; path = src/msu1.h; sourceTree = "<group>"; };
 		87431C041B02F20700F82158 /* stream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stream.cpp; path = src/stream.cpp; sourceTree = "<group>"; };
 		87431C051B02F20700F82158 /* stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream.h; path = src/stream.h; sourceTree = "<group>"; };
 		87431C071B0309F700F82158 /* loadzip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = loadzip.cpp; path = src/loadzip.cpp; sourceTree = "<group>"; };
@@ -420,6 +423,8 @@
 				94790D3F14C0C46900B30798 /* missing.h */,
 				94790D4014C0C46900B30798 /* movie.cpp */,
 				94790D4114C0C46900B30798 /* movie.h */,
+				8741B3AA1FC9361000A95A00 /* msu1.cpp */,
+				8741B3AB1FC9361000A95A00 /* msu1.h */,
 				94790D4214C0C46900B30798 /* netplay.cpp */,
 				94790D4314C0C46900B30798 /* netplay.h */,
 				94790D4414C0C46900B30798 /* obc1.cpp */,
@@ -684,6 +689,7 @@
 				94790DA414C0C46900B30798 /* logger.cpp in Sources */,
 				94790DA514C0C46900B30798 /* memmap.cpp in Sources */,
 				94790DA614C0C46900B30798 /* movie.cpp in Sources */,
+				8741B3AC1FC9361100A95A00 /* msu1.cpp in Sources */,
 				94790DA714C0C46900B30798 /* netplay.cpp in Sources */,
 				94790DA814C0C46900B30798 /* obc1.cpp in Sources */,
 				94790DA914C0C46900B30798 /* ppu.cpp in Sources */,
