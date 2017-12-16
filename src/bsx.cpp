@@ -929,7 +929,7 @@ void S9xBSXSetStream1 (uint8 count)
 		long str1size = BSX.sat_stream1.tellg();
 		BSX.sat_stream1.seekg(0, BSX.sat_stream1.beg);
 		float QueueSize = str1size / 22.;
-		BSX.PPU[0x218A - BSXPPUBASE] = (uint8)(ceil(QueueSize));
+		BSX.sat_stream1_queue = (uint16)(ceil(QueueSize));
 		BSX.PPU[0x218D - BSXPPUBASE] = 0;
 		BSX.sat_stream1_first = TRUE;
 		BSX.sat_stream1_loaded = TRUE;
@@ -961,7 +961,7 @@ void S9xBSXSetStream2 (uint8 count)
 		long str2size = BSX.sat_stream2.tellg();
 		BSX.sat_stream2.seekg(0, BSX.sat_stream2.beg);
 		float QueueSize = str2size / 22.;
-		BSX.PPU[0x2190 - BSXPPUBASE] = (uint8)(ceil(QueueSize));
+		BSX.sat_stream2_queue = (uint16)(ceil(QueueSize));
 		BSX.PPU[0x2193 - BSXPPUBASE] = 0;
 		BSX.sat_stream2_first = TRUE;
 		BSX.sat_stream2_loaded = TRUE;
@@ -1041,7 +1041,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 				break;
 			}
 
-			if (BSX.PPU[0x218A - BSXPPUBASE] <= 0)
+			if (BSX.sat_stream1_queue <= 0)
 			{
 				BSX.sat_stream1_count++;
 				S9xBSXSetStream1(BSX.sat_stream1_count - 1);
@@ -1054,7 +1054,14 @@ uint8 S9xGetBSXPPU (uint16 address)
 			}
 
 			if (BSX.sat_stream1_loaded)
+			{
+				//Lock at 0x7F for bigger packets
+				if (BSX.sat_stream1_queue >= 128)
+					BSX.PPU[0x218A - BSXPPUBASE] = 0x7F;
+				else
+					BSX.PPU[0x218A - BSXPPUBASE] = BSX.sat_stream1_queue;
 				t = BSX.PPU[0x218A - BSXPPUBASE];
+			}
 			else
 				t = 0;
 			break;
@@ -1078,9 +1085,9 @@ uint8 S9xGetBSXPPU (uint16 address)
 						BSX.sat_stream1_first = FALSE;
 					}
 
-					BSX.PPU[0x218A - BSXPPUBASE]--;
+					BSX.sat_stream1_queue--;
 
-					if (BSX.PPU[0x218A - BSXPPUBASE] == 0)
+					if (BSX.sat_stream1_queue == 0)
 					{
 						//Last packet
 						temp |= 0x80;
@@ -1152,7 +1159,7 @@ uint8 S9xGetBSXPPU (uint16 address)
 				break;
 			}
 
-			if (BSX.PPU[0x2190 - BSXPPUBASE] <= 0)
+			if (BSX.sat_stream2_queue <= 0)
 			{
 				BSX.sat_stream2_count++;
 				S9xBSXSetStream2(BSX.sat_stream2_count - 1);
@@ -1165,7 +1172,13 @@ uint8 S9xGetBSXPPU (uint16 address)
 			}
 
 			if (BSX.sat_stream2_loaded)
+			{
+				if (BSX.sat_stream2_queue >= 128)
+					BSX.PPU[0x2190 - BSXPPUBASE] = 0x7F;
+				else
+					BSX.PPU[0x2190 - BSXPPUBASE] = BSX.sat_stream2_queue;
 				t = BSX.PPU[0x2190 - BSXPPUBASE];
+			}
 			else
 				t = 0;
 			break;
@@ -1189,9 +1202,9 @@ uint8 S9xGetBSXPPU (uint16 address)
 						BSX.sat_stream2_first = FALSE;
 					}
 
-					BSX.PPU[0x2190 - BSXPPUBASE]--;
+					BSX.sat_stream2_queue--;
 
-					if (BSX.PPU[0x2190 - BSXPPUBASE] == 0)
+					if (BSX.sat_stream2_queue == 0)
 					{
 						//Last packet
 						temp |= 0x80;
@@ -1523,6 +1536,10 @@ void S9xResetBSX (void)
 
 	BSX.MMC[0x07] = BSX.MMC[0x08] = 0x80;
 	BSX.MMC[0x0E] = 0x80;
+
+	// default register values
+	BSX.PPU[0x2196 - BSXPPUBASE] = 0x10;
+	BSX.PPU[0x2197 - BSXPPUBASE] = 0x80;
 
 	// stream reset
 	BSX.sat_pf_latch1_enable = BSX.sat_dt_latch1_enable = FALSE;
