@@ -45,6 +45,10 @@
 #define SAMPLERATE      32040
 #define SIZESOUNDBUFFER SAMPLERATE / 50 * 4
 
+#ifdef DEBUG
+    #error "Cores should not be compiled in DEBUG! Follow the guide https://github.com/OpenEmu/OpenEmu/wiki/Compiling-From-Source-Guide"
+#endif
+
 @interface SNESGameCore () <OESNESSystemResponderClient>
 {
     NSMutableDictionary *cheatList;
