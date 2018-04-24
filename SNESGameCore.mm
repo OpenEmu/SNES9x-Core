@@ -175,6 +175,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     GFX.InfoString                  = NULL;
     GFX.InfoStringTimeout           = 0;
     Settings.DontSaveOopsSnapshot   = true;
+    Settings.NoPatch                = true;
 
     indirectVideoBuffer = (unsigned char *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
 
@@ -201,11 +202,37 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     
     S9xSetSamplesAvailableCallback(FinalizeSamplesAudioCallback, (__bridge void *)self);
 
-    Settings.NoPatch = true;
-    Settings.BSXBootup = false;
-
     if(Memory.LoadROM(path.fileSystemRepresentation))
     {
+        // Satellaview game detected
+        if(Settings.BS)
+        {
+            NSString *bsxPath        = [self.biosDirectoryPath stringByAppendingPathComponent:@"BS-X.bin"];
+            NSString *patchedBsxPath = [self.biosDirectoryPath stringByAppendingPathComponent:@"BS-X BIOS (English) [No DRM] [2016 v1.3].sfc"];
+            NSURL *bsxBIOS        = [NSURL fileURLWithPath:bsxPath];
+            NSURL *patchedBsxBIOS = [NSURL fileURLWithPath:patchedBsxPath];
+
+            // Prefer English patched BIOS
+            if([patchedBsxBIOS checkResourceIsReachableAndReturnError:nil])
+            {
+                NSData *dataObj = [NSData dataWithContentsOfURL:patchedBsxBIOS];
+                uint8_t *data = (uint8_t *)dataObj.bytes;
+                size_t size = dataObj.length;
+                memcpy(Memory.BIOSROM, data, size);
+                S9xSoftReset();
+            }
+            else if(![bsxBIOS checkResourceIsReachableAndReturnError:nil])
+            {
+                NSError *outErr = [NSError errorWithDomain:OEGameCoreErrorDomain code:OEGameCoreCouldNotLoadROMError userInfo:@{
+                    NSLocalizedDescriptionKey : @"Required BS-X BIOS file missing.",
+                    NSLocalizedRecoverySuggestionErrorKey : @"To run this Satellaview game you need: \"BS-X.bin\"\n\nObtain this file, drag and drop onto the game library window and try again.\n\nFor more information visit: https://github.com/OpenEmu/OpenEmu/wiki/User-guide:-BIOS-files"
+                    }];
+
+                *error = outErr;
+                return NO;
+            }
+        }
+
         NSString *path = [NSString stringWithUTF8String:Memory.ROMFilename];
         NSString *extensionlessFilename = [[path lastPathComponent] stringByDeletingPathExtension];
 

@@ -109,14 +109,15 @@ const char *S9xGetDirectory (enum s9x_getdirtype dirtype)
                                   stringByAppendingPathComponent:@"Application Support"]
                                  stringByAppendingPathComponent:@"OpenEmu"]
                                 stringByAppendingPathComponent:@"BIOS"];
-    
+
     NSLog(@"Get dir");
-	switch (dirtype)
-	{
-        case SRAM_DIR:			return [NSHomeDirectory() UTF8String];	break;
-		case BIOS_DIR:			return [biosPath UTF8String];	break;
-		default:				return NULL;	break;
-	}
+    switch (dirtype)
+    {
+        case SRAM_DIR:          return [NSHomeDirectory() UTF8String];  break;
+        case BIOS_DIR:          return [biosPath UTF8String];   break;
+        case SAT_DIR:           return [biosPath UTF8String];   break;
+        default:                return NULL;    break;
+    }
 }
 
 const char *S9xChooseFilename (bool8 read_only)

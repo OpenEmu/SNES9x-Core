@@ -28,6 +28,8 @@
 	<dict>
 		<key>openemu.system.snes</key>
 		<dict>
+			<key>OEGameCoreRequiresFiles</key>
+			<true/>
 			<key>OEGameCoreRewindBufferSeconds</key>
 			<integer>60</integer>
 			<key>OEGameCoreRewindInterval</key>
@@ -36,6 +38,33 @@
 			<true/>
 			<key>OEGameCoreSupportsRewinding</key>
 			<true/>
+			<key>OERequiredFiles</key>
+			<array>
+				<dict>
+					<key>Description</key>
+					<string>Satellaview BS-X BIOS</string>
+					<key>MD5</key>
+					<string>FED4D8242CFBED61343D53D48432ACED</string>
+					<key>Name</key>
+					<string>BS-X.bin</string>
+					<key>Optional</key>
+					<true/>
+					<key>Size</key>
+					<integer>1048576</integer>
+				</dict>
+				<dict>
+					<key>Description</key>
+					<string>BS-X BIOS (English) [No DRM] [2016 v1.3]</string>
+					<key>MD5</key>
+					<string>96CF17BF589FCBFA6F8DE2DC84F19FA2</string>
+					<key>Name</key>
+					<string>BS-X BIOS (English) [No DRM] [2016 v1.3].sfc</string>
+					<key>Optional</key>
+					<true/>
+					<key>Size</key>
+					<integer>1048576</integer>
+				</dict>
+			</array>
 		</dict>
 	</dict>
 	<key>OEGameCorePlayerCount</key>
