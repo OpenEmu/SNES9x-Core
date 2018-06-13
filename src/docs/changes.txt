@@ -1,3 +1,12 @@
+Snes9x 1.56.1
+- Automatic input rate now only works for close multiples   (BearOso)
+  of 60Hz.
+- Win32: Cheats are now shown in the correct order in the   (BearOso)
+  list view.
+- GTK+: Check for version greater than 3.22 when using GTK+ (BearOso)
+  3.
+- GTK+: Don't resize code and description field in GTK+ 2.  (BearOso)
+
 Snes9x 1.56
 - Increased the speed of SA1 emulation to match hardware    (BearOso)
   more closely.
@@ -16,7 +25,7 @@ Snes9x 1.56
   readable and editable format as gamename.cht. Cheats are
   converted from the old format on load. They can be added
   in many different formats, but they will convert to the
-  simple address?condition=byte format.
+  simple address=condition?byte format.
   Also, now included is mightymo's cheat database, and the
   ability to match a game and automatically load cheats
   from it.
