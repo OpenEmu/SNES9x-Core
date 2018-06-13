@@ -885,20 +885,14 @@ static void FinalizeSamplesAudioCallback(void *context)
             for (NSString *singleCode in multipleCodes) {
                 // Sanitize for PAR codes that might contain colons
                 const char *cheatCode = [[singleCode stringByReplacingOccurrencesOfString:@":" withString:@""] UTF8String];
-                uint32		address;
-                uint8		byte;
-                
-                // Both will determine if valid cheat code or not
-                S9xGameGenieToRaw(cheatCode, address, byte);
-                S9xProActionReplayToRaw(cheatCode, address, byte);
-                
-                S9xAddCheat(true, true, address, byte);
+
+                S9xAddCheatGroup("OpenEmu", cheatCode);
+                S9xEnableCheatGroup(Cheat.g.size () - 1);
             }
         }
     }
-    
-    Settings.ApplyCheats = true;
-    S9xApplyCheats();
+
+    S9xCheatsEnable();
 }
 
 @end

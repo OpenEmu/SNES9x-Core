@@ -22,7 +22,7 @@
 
   (c) Copyright 2006 - 2007  nitsuja
 
-  (c) Copyright 2009 - 2017  BearOso,
+  (c) Copyright 2009 - 2018  BearOso,
                              OV2
 
   (c) Copyright 2017         qwertymodo
@@ -140,7 +140,7 @@
   (c) Copyright 2006 - 2007  Shay Green
 
   GTK+ GUI code
-  (c) Copyright 2004 - 2017  BearOso
+  (c) Copyright 2004 - 2018  BearOso
 
   Win32 GUI code
   (c) Copyright 2003 - 2006  blip,
@@ -148,7 +148,7 @@
                              Matthew Kendora,
                              Nach,
                              nitsuja
-  (c) Copyright 2009 - 2017  OV2
+  (c) Copyright 2009 - 2018  OV2
 
   Mac OS GUI code
   (c) Copyright 1998 - 2001  John Stiles
@@ -268,10 +268,7 @@ static void BSX_Map_SRAM (void);
 static void BSX_Map_PSRAM (void);
 static void BSX_Map_BIOS (void);
 static void BSX_Map_RAM (void);
-static void BSX_Map_Dirty (void);
 static void BSX_Map (void);
-static void BSX_Set_Bypass_FlashIO (uint16, uint8);
-static uint8 BSX_Get_Bypass_FlashIO (uint16);
 static bool8 BSX_LoadBIOS (void);
 static void map_psram_mirror_sub (uint32);
 static int is_bsx (unsigned char *);
@@ -665,39 +662,6 @@ static void BSX_Map_RAM (void)
 		BlockIsRAM[c + 0x7F0] = TRUE;
 		BlockIsROM[c + 0x7E0] = FALSE;
 		BlockIsROM[c + 0x7F0] = FALSE;
-	}
-}
-
-static void BSX_Map_Dirty (void)
-{
-	// for the quick bank change
-
-	int i, c;
-
-	// Banks 00->1F and 80->9F:8000-FFFF
-	if (BSX.MMC[0x02])
-	{
-		for (c = 0; c < 0x200; c += 16)
-		{
-			for (i = c + 8; i < c + 16; i++)
-			{
-				Map[i] = Map[i + 0x800] = &MapROM[(c << 12) % FlashSize];
-				BlockIsRAM[i] = BlockIsRAM[i + 0x800] = BSX.write_enable;
-				BlockIsROM[i] = BlockIsROM[i + 0x800] = !BSX.write_enable;
-			}
-		}
-	}
-	else
-	{
-		for (c = 0; c < 0x200; c += 16)
-		{
-			for (i = c + 8; i < c + 16; i++)
-			{
-				Map[i] = Map[i + 0x800] = &MapROM[(c << 11) % FlashSize] - 0x8000;
-				BlockIsRAM[i] = BlockIsRAM[i + 0x800] = BSX.write_enable;
-				BlockIsROM[i] = BlockIsROM[i + 0x800] = !BSX.write_enable;
-			}
-		}
 	}
 }
 
@@ -1512,6 +1476,12 @@ void S9xInitBSX (void)
 
 			FlashMode = (header[0x18] & 0xEF) == 0x20 ? FALSE : TRUE;
 			FlashSize = FLASH_SIZE;
+
+			// Fix Block Allocation Flags
+			// (for games that don't have it setup properly,
+			// for exemple when taken seperately from the upper memory of the Memory Pack,
+			// else the game will error out on BS-X)
+			for (; (((header[0x10] & 1) == 0) && header[0x10] != 0); (header[0x10] >>= 1));
 
 #ifdef BSX_DEBUG
 			for (int i = 0; i <= 0x1F; i++)

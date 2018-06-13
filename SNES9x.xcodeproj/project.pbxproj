@@ -31,6 +31,8 @@
 		8725B0BC1E933E2D00F68CA5 /* smp_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8725B0B51E931ED600F68CA5 /* smp_state.cpp */; };
 		8741B3AC1FC9361100A95A00 /* msu1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8741B3AA1FC9361000A95A00 /* msu1.cpp */; };
 		87431C061B02F20700F82158 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87431C041B02F20700F82158 /* stream.cpp */; };
+		8769DC9D20D19CDC005ABC18 /* bml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8769DC9C20D19CDB005ABC18 /* bml.cpp */; };
+		8769DCA020D19D1C005ABC18 /* sha256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8769DC9E20D19D1C005ABC18 /* sha256.cpp */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		94790D7A14C0C46900B30798 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790CDC14C0C46900B30798 /* apu.cpp */; };
@@ -163,6 +165,10 @@
 		87431C041B02F20700F82158 /* stream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stream.cpp; path = src/stream.cpp; sourceTree = "<group>"; };
 		87431C051B02F20700F82158 /* stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stream.h; path = src/stream.h; sourceTree = "<group>"; };
 		87431C071B0309F700F82158 /* loadzip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = loadzip.cpp; path = src/loadzip.cpp; sourceTree = "<group>"; };
+		8769DC9B20D19CDB005ABC18 /* bml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bml.h; path = src/bml.h; sourceTree = "<group>"; };
+		8769DC9C20D19CDB005ABC18 /* bml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bml.cpp; path = src/bml.cpp; sourceTree = "<group>"; };
+		8769DC9E20D19D1C005ABC18 /* sha256.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sha256.cpp; path = src/sha256.cpp; sourceTree = "<group>"; };
+		8769DC9F20D19D1C005ABC18 /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha256.h; path = src/sha256.h; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* SNES9x.oecoreplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SNES9x.oecoreplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		942597D5151470C00074E3A3 /* OpenEmuBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEmuBase.framework; path = ../OpenEmu/build/Release/OpenEmuBase.framework; sourceTree = "<group>"; };
@@ -370,6 +376,8 @@
 			children = (
 				94790CDA14C0C46900B30798 /* 65c816.h */,
 				94790CDB14C0C46900B30798 /* apu */,
+				8769DC9C20D19CDB005ABC18 /* bml.cpp */,
+				8769DC9B20D19CDB005ABC18 /* bml.h */,
 				94790CF014C0C46900B30798 /* bsx.cpp */,
 				94790CF114C0C46900B30798 /* bsx.h */,
 				94790CF214C0C46900B30798 /* c4.cpp */,
@@ -449,6 +457,8 @@
 				94790D5914C0C46900B30798 /* seta010.cpp */,
 				94790D5A14C0C46900B30798 /* seta011.cpp */,
 				94790D5B14C0C46900B30798 /* seta018.cpp */,
+				8769DC9E20D19D1C005ABC18 /* sha256.cpp */,
+				8769DC9F20D19D1C005ABC18 /* sha256.h */,
 				94790D5C14C0C46900B30798 /* snapshot.cpp */,
 				94790D5D14C0C46900B30798 /* snapshot.h */,
 				94790D5E14C0C46900B30798 /* snes9x.cpp */,
@@ -662,6 +672,7 @@
 				8725B0BA1E933E1E00F68CA5 /* SPC_DSP.cpp in Sources */,
 				8725B0BB1E933E2B00F68CA5 /* smp.cpp in Sources */,
 				8725B0BC1E933E2D00F68CA5 /* smp_state.cpp in Sources */,
+				8769DC9D20D19CDC005ABC18 /* bml.cpp in Sources */,
 				94790D8114C0C46900B30798 /* bsx.cpp in Sources */,
 				94790D8214C0C46900B30798 /* c4.cpp in Sources */,
 				94790D8314C0C46900B30798 /* c4emu.cpp in Sources */,
@@ -703,6 +714,7 @@
 				94790DB214C0C46900B30798 /* seta010.cpp in Sources */,
 				94790DB314C0C46900B30798 /* seta011.cpp in Sources */,
 				94790DB414C0C46900B30798 /* seta018.cpp in Sources */,
+				8769DCA020D19D1C005ABC18 /* sha256.cpp in Sources */,
 				94790DB514C0C46900B30798 /* snapshot.cpp in Sources */,
 				94790DB614C0C46900B30798 /* snes9x.cpp in Sources */,
 				94790DB714C0C46900B30798 /* spc7110.cpp in Sources */,
