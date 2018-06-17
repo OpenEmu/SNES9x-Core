@@ -180,6 +180,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
     GFX.InfoStringTimeout           = 0;
     Settings.DontSaveOopsSnapshot   = true;
     Settings.NoPatch                = true;
+    Settings.SuperFXClockMultiplier = 100;
 
     indirectVideoBuffer = (unsigned char *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
 
