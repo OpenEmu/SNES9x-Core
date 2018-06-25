@@ -233,7 +233,7 @@ void S9xMainLoop (void)
 				{
 					CPU.WaitingForInterrupt = FALSE;
 					Registers.PCw++;
-					CPU.Cycles += ONE_CYCLE;
+					CPU.Cycles += TWO_CYCLES + ONE_DOT_CYCLE / 2;
 					while (CPU.Cycles >= CPU.NextEvent)
 						S9xDoHEventProcessing();
 				}
@@ -243,20 +243,6 @@ void S9xMainLoop (void)
 			}
 		}
 
-		if (CPU.IRQTransition)
-		{
-			if (CPU.WaitingForInterrupt)
-			{
-				CPU.WaitingForInterrupt = FALSE;
-				Registers.PCw++;
-				CPU.Cycles += ONE_CYCLE;
-				while (CPU.Cycles >= CPU.NextEvent)
-					S9xDoHEventProcessing();
-			}
-			CPU.IRQTransition = FALSE;
-			CPU.IRQLine = TRUE;
-		}
-
 		if (CPU.Cycles >= Timings.NextIRQTimer)
 		{
 			#ifdef DEBUGGER
@@ -264,14 +250,26 @@ void S9xMainLoop (void)
 			#endif
 
 			S9xUpdateIRQPositions(false);
-			CPU.IRQTransition = TRUE;
+			CPU.IRQLine = TRUE;
 		}
 
-		if ((CPU.IRQLine || CPU.IRQExternal) && !CheckFlag(IRQ))
+		if (CPU.IRQLine || CPU.IRQExternal)
 		{
-			/* The flag pushed onto the stack is the new value */
-			CHECK_FOR_IRQ_CHANGE();
-			S9xOpcode_IRQ();
+			if (CPU.WaitingForInterrupt)
+			{
+				CPU.WaitingForInterrupt = FALSE;
+				Registers.PCw++;
+				CPU.Cycles += TWO_CYCLES + ONE_DOT_CYCLE / 2;
+				while (CPU.Cycles >= CPU.NextEvent)
+					S9xDoHEventProcessing();
+			}
+
+			if (!CheckFlag(IRQ))
+			{
+				/* The flag pushed onto the stack is the new value */
+				CHECK_FOR_IRQ_CHANGE();
+				S9xOpcode_IRQ();
+			}
 		}
 
 		/* Change IRQ flag for instructions that set it only on last cycle */
@@ -407,8 +405,8 @@ void S9xDoHEventProcessing (void)
 
 #ifdef DEBUGGER
 	if (Settings.TraceHCEvent)
-		S9xTraceFormattedMessage("--- HC event processing  (%s)  expected HC:%04d  executed HC:%04d",
-			eventname[CPU.WhichEvent], CPU.NextEvent, CPU.Cycles);
+		S9xTraceFormattedMessage("--- HC event processing  (%s)  expected HC:%04d  executed HC:%04d VC:%04d",
+			eventname[CPU.WhichEvent], CPU.NextEvent, CPU.Cycles, CPU.V_Counter);
 #endif
 
 	switch (CPU.WhichEvent)
