@@ -80,7 +80,6 @@
 		94790DB714C0C46900B30798 /* spc7110.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D6014C0C46900B30798 /* spc7110.cpp */; };
 		94790DBA14C0C46900B30798 /* srtc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D6614C0C46900B30798 /* srtc.cpp */; };
 		94790DBC14C0C46900B30798 /* tile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790D6A14C0C46900B30798 /* tile.cpp */; };
-		C67F02030FC200A6009C6CD6 /* SNESOESupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 82AD85B50F41646E00DF0AE1 /* SNESOESupport.mm */; };
 		C6D120FB1711314D00E868A8 /* OpenEmuBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6D120FA1711314D00E868A8 /* OpenEmuBase.framework */; };
 /* End PBXBuildFile section */
 
@@ -117,7 +116,6 @@
 		826C1B1D0F420C2200FB9014 /* SNESGameCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNESGameCore.h; sourceTree = "<group>"; };
 		826C1B1E0F420C2200FB9014 /* SNESGameCore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SNESGameCore.mm; sourceTree = "<group>"; };
 		828F16CA0F43A10000FD7321 /* APPL.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = APPL.icns; sourceTree = "<group>"; };
-		82AD85B50F41646E00DF0AE1 /* SNESOESupport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SNESOESupport.mm; sourceTree = "<group>"; };
 		8725B08B1E931ED600F68CA5 /* blargg_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blargg_common.h; sourceTree = "<group>"; };
 		8725B08C1E931ED600F68CA5 /* blargg_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blargg_config.h; sourceTree = "<group>"; };
 		8725B08D1E931ED600F68CA5 /* blargg_endian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blargg_endian.h; sourceTree = "<group>"; };
@@ -331,7 +329,6 @@
 				C6480FFA1364B1CF0094FA33 /* OESNESSystemResponderClient.h */,
 				826C1B1D0F420C2200FB9014 /* SNESGameCore.h */,
 				826C1B1E0F420C2200FB9014 /* SNESGameCore.mm */,
-				82AD85B50F41646E00DF0AE1 /* SNESOESupport.mm */,
 				82AD83C60F4154DD00DF0AE1 /* core */,
 			);
 			name = Classes;
@@ -666,7 +663,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				826C1B1F0F420C2200FB9014 /* SNESGameCore.mm in Sources */,
-				C67F02030FC200A6009C6CD6 /* SNESOESupport.mm in Sources */,
 				94790D7A14C0C46900B30798 /* apu.cpp in Sources */,
 				8725B0B91E933E1B00F68CA5 /* sdsp.cpp in Sources */,
 				8725B0BA1E933E1E00F68CA5 /* SPC_DSP.cpp in Sources */,
