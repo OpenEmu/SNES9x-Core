@@ -109,6 +109,11 @@ static __weak SNESGameCore *_current;
     Settings.NoPatch                = true;
     Settings.AutoSaveDelay          = 0;
     Settings.SuperFXClockMultiplier = 100;
+    Settings.MaxSpriteTilesPerLine  = 34;
+    Settings.InterpolationMethod    = DSP_INTERPOLATION_GAUSSIAN;
+    Settings.OneClockCycle          = ONE_CYCLE;
+    Settings.OneSlowClockCycle      = SLOW_ONE_CYCLE;
+    Settings.TwoClockCycles         = TWO_CYCLES;
 
     _indirectVideoBuffer = (uint16_t *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
 
