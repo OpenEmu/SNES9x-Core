@@ -504,6 +504,7 @@ static __weak SNESGameCore *_current;
           @"b069bb3a", // Secret of Mana (Germany)
           @"b8049e3c", // Seiken Densetsu 2 (Japan)
           @"d0176b24", // Secret of Mana (USA)
+          @"d36f5341", // Secret of Mana "Enhanced" Homebrew
           @"e6b9a402", // Shijou Saikyou no Quiz Ou Ketteisen Super (Japan)
           @"58da330c", // Shin Nihon Pro Wrestling - Chou Senshi in Tokyo Dome - Fantastic Story (Japan)
           @"6cbbd019", // Shin Nihon Pro Wrestling Kounin - '94 Battlefield in Tokyo Dome (Japan)
