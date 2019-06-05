@@ -1381,7 +1381,13 @@ void S9xSetCPU (uint8 Byte, uint16 Address)
 				}
 
 				if ((Byte & 0x30) != (Memory.FillRAM[0x4200] & 0x30))
-					S9xUpdateIRQPositions(true);
+				{
+					// Only allow instantaneous IRQ if turning it completely on or off
+					if ((Byte & 0x30) == 0 || (Memory.FillRAM[0x4200] & 0x30) == 0)
+						S9xUpdateIRQPositions(true);
+					else
+						S9xUpdateIRQPositions(false);
+				}
 
 				// NMI can trigger immediately during VBlank as long as NMI_read ($4210) wasn't cleard.
 				if ((Byte & 0x80) && !(Memory.FillRAM[0x4200] & 0x80) &&
@@ -1882,6 +1888,7 @@ void S9xSoftResetPPU (void)
 	memset(IPPU.TileCached[TILE_4BIT_ODD], 0,  MAX_4BIT_TILES);
 	PPU.VRAMReadBuffer = 0; // XXX: FIXME: anything better?
 	GFX.InterlaceFrame = 0;
+	GFX.DoInterlace = 0;
 	IPPU.Interlace = FALSE;
 	IPPU.InterlaceOBJ = FALSE;
 	IPPU.DoubleWidthPixels = FALSE;

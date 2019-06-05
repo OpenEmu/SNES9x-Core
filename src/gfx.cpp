@@ -53,8 +53,6 @@ bool8 S9xGraphicsInit (void)
 		S9xSetRenderPixelFormat(RGB565);
 #endif
 
-	GFX.DoInterlace = 0;
-	GFX.InterlaceFrame = 0;
 	GFX.RealPPL = GFX.Pitch >> 1;
 	IPPU.OBJChanged = TRUE;
 	Settings.BG_Forced = 0;
@@ -199,6 +197,8 @@ void S9xBuildDirectColourMaps (void)
 void S9xStartScreenRefresh (void)
 {
 	GFX.InterlaceFrame = !GFX.InterlaceFrame;
+	if (GFX.DoInterlace)
+		GFX.DoInterlace--;
 
 	if (IPPU.RenderThisFrame)
 	{
@@ -209,9 +209,6 @@ void S9xStartScreenRefresh (void)
 				IPPU.RenderThisFrame = FALSE;
 				return;
 			}
-
-			if (GFX.DoInterlace)
-				GFX.DoInterlace--;
 
 			S9xGraphicsScreenResize();
 

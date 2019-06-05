@@ -130,10 +130,9 @@ static __weak SNESGameCore *_current;
         return NO;
     }
 
-    /* buffer_ms : buffer size given in millisecond
-     lag_ms    : allowable time-lag given in millisecond
-     S9xInitSound(macSoundBuffer_ms, macSoundLagEnable ? macSoundBuffer_ms / 2 : 0); */
-    if(!S9xInitSound(100, 0))
+    // TODO investigate this, all sound-related settings, SAMPLERATE, SIZESOUNDBUFFER after latest APU changes
+    // audio is no longer perfect again e.g. crackling/popping (underruns) in SD3 intro
+    if(!S9xInitSound(100))
         NSLog(@"[Snes9x] Couldn't init sound");
     
     S9xSetSamplesAvailableCallback(FinalizeSamplesAudioCallback, (__bridge void *)self);
@@ -713,7 +712,6 @@ static void FinalizeSamplesAudioCallback(void *context)
 
 - (void)finalizeAudioSamples
 {
-    S9xFinalizeSamples();
     int samples = S9xGetSampleCount();
     S9xMixSamples((uint8_t *)_soundBuffer, samples);
     [[self ringBufferAtIndex:0] write:_soundBuffer maxLength:samples * 2];
