@@ -239,7 +239,7 @@ void S9xLoadConfigFiles (char **argv, int argc)
 	Settings.Stereo                     =  conf.GetBool("Sound::Stereo",                       true);
 	Settings.ReverseStereo              =  conf.GetBool("Sound::ReverseStereo",                false);
 	Settings.SoundPlaybackRate          =  conf.GetUInt("Sound::Rate",                         48000);
-	Settings.SoundInputRate             =  conf.GetUInt("Sound::InputRate",                    31920);
+	Settings.SoundInputRate             =  conf.GetUInt("Sound::InputRate",                    31950);
 	Settings.Mute                       =  conf.GetBool("Sound::Mute",                         false);
 	Settings.DynamicRateControl         =  conf.GetBool("Sound::DynamicRateControl",           false);
 	Settings.DynamicRateLimit           =  conf.GetInt ("Sound::DynamicRateLimit",             5);
@@ -308,7 +308,8 @@ void S9xLoadConfigFiles (char **argv, int argc)
 
 	// Hack
 	Settings.SuperFXClockMultiplier         = conf.GetUInt("Hack::SuperFXClockMultiplier", 100);
-
+    Settings.OverclockMode                  = conf.GetUInt("Hack::OverclockMode", 0);
+    Settings.SeparateEchoBuffer             = conf.GetBool("Hack::SeparateEchoBuffer", false);
 	Settings.DisableGameSpecificHacks       = !conf.GetBool("Hack::EnableGameSpecificHacks",       true);
 	Settings.BlockInvalidVRAMAccessMaster   = !conf.GetBool("Hack::AllowInvalidVRAMAccess",        false);
 	Settings.HDMATimingHack                 =  conf.GetInt ("Hack::HDMATiming",                    100);
@@ -491,6 +492,11 @@ char * S9xParseArgs (char **argv, int argc)
 
 			if (!strcasecmp(argv[i], "-soundsync"))
 				Settings.SoundSync = TRUE;
+			else if (!strcasecmp(argv[i], "-dynamicratecontrol"))
+			{
+				Settings.DynamicRateControl = TRUE;
+				Settings.DynamicRateLimit = 5;
+			}
 			else
 			if (!strcasecmp(argv[i], "-playbackrate"))
 			{

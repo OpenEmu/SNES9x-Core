@@ -5,7 +5,6 @@
 \*****************************************************************************/
 
 #include <cmath>
-#include <vector>
 #include "../snes9x.h"
 #include "apu.h"
 #include "../msu1.h"
@@ -15,12 +14,12 @@
 
 #include "bapu/snes/snes.hpp"
 
-static const int APU_DEFAULT_INPUT_RATE = 31920; // ~59.94Hz
+static const int APU_DEFAULT_INPUT_RATE = 31950; // ~59.94Hz
 static const int APU_SAMPLE_BLOCK       = 48;
-static const int APU_NUMERATOR_NTSC     = 5632;
-static const int APU_DENOMINATOR_NTSC   = 118125;
-static const int APU_NUMERATOR_PAL      = 35527;
-static const int APU_DENOMINATOR_PAL    = 738343;
+static const int APU_NUMERATOR_NTSC     = 15664;
+static const int APU_DENOMINATOR_NTSC   = 328125;
+static const int APU_NUMERATOR_PAL      = 34176;
+static const int APU_DENOMINATOR_PAL    = 709379;
 
 // Max number of samples we'll ever generate before call to port API and
 // moving the samples to the resampler.
@@ -58,7 +57,8 @@ static double dynamic_rate_multiplier = 1.0;
 namespace msu {
 // Always 16-bit, Stereo; 1.5x dsp buffer to never overflow
 static Resampler *resampler = NULL;
-static std::vector<int16> resample_buffer;
+static int16 *resample_buffer = NULL;
+static int resample_buffer_size = 0;
 } // namespace msu
 
 static void UpdatePlaybackRate(void);
@@ -85,12 +85,20 @@ bool8 S9xMixSamples(uint8 *dest, int sample_count)
             {
                 if (msu::resampler->avail() >= sample_count)
                 {
-                    if ((int)msu::resample_buffer.size() < sample_count)
-                        msu::resample_buffer.resize(sample_count);
-                    msu::resampler->read((short *)msu::resample_buffer.data(),
+                    if (msu::resample_buffer_size < sample_count)
+                    {
+                        if (msu::resample_buffer)
+                            delete[] msu::resample_buffer;
+                        msu::resample_buffer = new int16[sample_count];
+                        msu::resample_buffer_size = sample_count;
+                    }
+                    msu::resampler->read(msu::resample_buffer,
                                          sample_count);
                     for (int i = 0; i < sample_count; ++i)
-                        out[i] += msu::resample_buffer[i];
+                    {
+                        int32 mixed = (int32)out[i] + msu::resample_buffer[i];
+                        out[i] = ((int16)mixed != mixed) ? (mixed >> 31) ^ 0x7fff : mixed;
+                    }
                 }
                 else // should never occur
                     assert(0);
@@ -176,7 +184,7 @@ static void UpdatePlaybackRate(void)
 
     if (Settings.MSU1)
     {
-        time_ratio = (44100.0 / Settings.SoundPlaybackRate) * (Settings.SoundInputRate / 32000.0);
+        time_ratio = (44100.0 / Settings.SoundPlaybackRate) * (Settings.SoundInputRate / 32040.0);
         msu::resampler->time_ratio(time_ratio);
     }
 }

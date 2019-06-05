@@ -95,25 +95,30 @@ static __weak SNESGameCore *_current;
     Settings.SuperScopeMaster       = true;
     Settings.MultiPlayer5Master     = true;
     Settings.JustifierMaster        = true;
-    Settings.SixteenBitSound        = true;
-    Settings.Stereo                 = true;
+    Settings.SoundSync              = false;
     Settings.SoundPlaybackRate      = SAMPLERATE;
     Settings.SoundInputRate         = 32040;
+    Settings.DynamicRateControl     = false;
+    Settings.DynamicRateLimit       = 5;
     Settings.SupportHiRes           = true;
     Settings.Transparency           = true;
-    Settings.HDMATimingHack         = 100;
-    Settings.BlockInvalidVRAMAccessMaster = true; // disabling may fix some homebrew or other games
     GFX.InfoString                  = NULL;
     GFX.InfoStringTimeout           = 0;
     Settings.DontSaveOopsSnapshot   = true;
     Settings.NoPatch                = true;
     Settings.AutoSaveDelay          = 0;
-    Settings.SuperFXClockMultiplier = 100;
-    Settings.MaxSpriteTilesPerLine  = 34;
+    // Hack
     Settings.InterpolationMethod    = DSP_INTERPOLATION_GAUSSIAN;
     Settings.OneClockCycle          = ONE_CYCLE;
     Settings.OneSlowClockCycle      = SLOW_ONE_CYCLE;
     Settings.TwoClockCycles         = TWO_CYCLES;
+    Settings.SuperFXClockMultiplier = 100;
+    Settings.OverclockMode          = 0;
+    Settings.SeparateEchoBuffer     = false;
+    Settings.DisableGameSpecificHacks = false;
+    Settings.BlockInvalidVRAMAccessMaster = true; // disabling may fix some homebrew or ROM hacks
+    Settings.HDMATimingHack         = 100;
+    Settings.MaxSpriteTilesPerLine  = 34;
 
     _indirectVideoBuffer = (uint16_t *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
 
@@ -719,7 +724,7 @@ static void FinalizeSamplesAudioCallback(void *context)
 
 - (double)audioSampleRate
 {
-    return 32040;
+    return SAMPLERATE;
 }
 
 - (NSUInteger)channelCount

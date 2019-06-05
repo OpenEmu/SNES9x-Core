@@ -8,7 +8,7 @@
 #define _SNES9X_H_
 
 #ifndef VERSION
-#define VERSION	"1.59.2"
+#define VERSION	"1.60"
 #endif
 
 #include "port.h"
@@ -157,9 +157,10 @@ enum
 
 enum
 {
-	IRQ_NONE = 0,
-	IRQ_SET_FLAG = 1,
-	IRQ_CLEAR_FLAG = 2
+	IRQ_NONE        = 0x0,
+	IRQ_SET_FLAG    = 0x1,
+	IRQ_CLEAR_FLAG  = 0x2,
+	IRQ_TRIGGER_NMI = 0x4
 };
 
 struct STimings
@@ -296,13 +297,16 @@ struct SSettings
 	bool8	ApplyCheats;
 	bool8	NoPatch;
 	bool8	IgnorePatchChecksum;
+	bool8	IsPatched;
 	int32	AutoSaveDelay;
 	bool8	DontSaveOopsSnapshot;
 	bool8	UpAndDown;
 
 	bool8	OpenGLEnable;
 
+    bool8   SeparateEchoBuffer;
 	uint32	SuperFXClockMultiplier;
+    int OverclockMode;
 	int	OneClockCycle;
 	int	OneSlowClockCycle;
 	int	TwoClockCycles;
