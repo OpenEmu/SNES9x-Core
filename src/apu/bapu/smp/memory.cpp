@@ -8,6 +8,7 @@ void SMP::port_write(unsigned addr, unsigned data) {
 
 unsigned SMP::mmio_read(unsigned addr) {
   switch(addr) {
+
   case 0xf2:
     return status.dsp_addr;
 
@@ -50,8 +51,8 @@ unsigned SMP::mmio_read(unsigned addr) {
 }
 
 void SMP::mmio_write(unsigned addr, unsigned data) {
-  if (addr >= 0xffc0)
-  {
+
+  if (addr >= 0xffc0) {
     if (status.iplrom_enable)
       highmem[addr & 0x3f] = data;
     else

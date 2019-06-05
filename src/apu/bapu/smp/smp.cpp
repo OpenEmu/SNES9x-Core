@@ -50,7 +50,7 @@ void SMP::reset() {
 
   //$00f1
   status.iplrom_enable = true;
-  memcpy(highmem, iplrom, 64);
+  memset(highmem, 0, 64);
   memcpy(&apuram[0xffc0], iplrom, 64);
 
   //$00f2

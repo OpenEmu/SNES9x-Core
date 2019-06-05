@@ -38,22 +38,20 @@ void SMP::op_write(uint16 addr, uint8 data) {
     apuram[addr] = data;
 }
 
-uint8 SMP::op_readpc() {
-  tick();
-  return apuram[regs.pc++];
-}
-
-uint8 SMP::op_readstack() {
+uint8 SMP::op_readstack()
+{
   tick();
   return apuram[0x0100 | ++regs.sp];
 }
 
-void SMP::op_writestack(uint8 data) {
+void SMP::op_writestack(uint8 data)
+{
   tick();
   apuram[0x0100 | regs.sp--] = data;
 }
 
 void SMP::op_step() {
+  #define op_readpc() op_read(regs.pc++)
   #define op_readdp(addr) op_read((regs.p.p << 8) + ((addr) & 0xff))
   #define op_writedp(addr, data) op_write((regs.p.p << 8) + ((addr) & 0xff), data)
   #define op_readaddr(addr) op_read(addr)
