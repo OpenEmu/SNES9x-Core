@@ -54,6 +54,7 @@
 {
     uint16_t *_indirectVideoBuffer;
     uint16_t *_soundBuffer;
+    uint16_t *_soundBufferCurrent;
     NSURL    *_romURL;
     NSMutableDictionary<NSString *, NSNumber *> *_cheatList;
 }
@@ -641,7 +642,10 @@ static __weak SNESGameCore *_current;
 - (void)executeFrame
 {
     IPPU.RenderThisFrame = true;
+    _soundBufferCurrent = _soundBuffer;
     S9xMainLoop();
+    NSUInteger samples = _soundBufferCurrent - _soundBuffer;
+    [[self audioBufferAtIndex:0] write:_soundBuffer maxLength:samples * 2];
 }
 
 - (void)setupEmulation
@@ -718,8 +722,8 @@ static void FinalizeSamplesAudioCallback(void *context)
 - (void)finalizeAudioSamples
 {
     int samples = S9xGetSampleCount();
-    S9xMixSamples((uint8_t *)_soundBuffer, samples);
-    [[self ringBufferAtIndex:0] write:_soundBuffer maxLength:samples * 2];
+    S9xMixSamples((uint8_t *)_soundBufferCurrent, samples);
+    _soundBufferCurrent += samples;
 }
 
 - (double)audioSampleRate
