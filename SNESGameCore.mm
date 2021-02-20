@@ -169,7 +169,9 @@ static __weak SNESGameCore *_current;
                     NSLocalizedRecoverySuggestionErrorKey : @"To run this Satellaview game you need: \"BS-X.bin\"\n\nObtain this file, drag and drop onto the game library window and try again.\n\nFor more information visit: https://github.com/OpenEmu/OpenEmu/wiki/User-guide:-BIOS-files"
                     }];
 
-                *error = outErr;
+                if (error) {
+                    *error = outErr;
+                }
                 return NO;
             }
         }
