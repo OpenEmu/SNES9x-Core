@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.60</string>
+	<string>1.61</string>
 	<key>NSPrincipalClass</key>
 	<string>OEGameCoreController</string>
 	<key>OEGameCoreClass</key>
@@ -70,7 +70,7 @@
 	<key>OEGameCorePlayerCount</key>
 	<string>8</string>
 	<key>OEProjectURL</key>
-	<string>http://www.snes9x.com/</string>
+	<string>https://github.com/snes9xgit/snes9x</string>
 	<key>OESystemIdentifiers</key>
 	<array>
 		<string>openemu.system.snes</string>

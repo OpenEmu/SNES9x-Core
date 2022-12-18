@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2018, OpenEmu Team
+ Copyright (c) 2022, OpenEmu Team
 
 
  Redistribution and use in source and binary forms, with or without
@@ -1030,19 +1030,9 @@ const char *S9xStringInput(const char *message)
     return NULL;
 }
 
-const char *S9xChooseMovieFilename(bool8 read_only)
-{
-    return NULL;
-}
-
-const char *S9xChooseFilename(bool8 read_only)
-{
-    return NULL;
-}
-
 const char *S9xGetFilename(const char *extension, enum s9x_getdirtype dirtype)
 {
-    return NULL;
+    return "";
 }
 
 const char *S9xGetFilenameInc(const char *, enum s9x_getdirtype)
@@ -1082,10 +1072,6 @@ void S9xExit()
 }
 
 void S9xHandlePortCommand(s9xcommand_t cmd, int16 data1, int16 data2)
-{
-}
-
-void S9xSetPalette()
 {
 }
 

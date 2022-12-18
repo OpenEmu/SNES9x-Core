@@ -32,6 +32,9 @@
 		87431C061B02F20700F82158 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87431C041B02F20700F82158 /* stream.cpp */; };
 		8769DC9D20D19CDC005ABC18 /* bml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8769DC9C20D19CDB005ABC18 /* bml.cpp */; };
 		8769DCA020D19D1C005ABC18 /* sha256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8769DC9E20D19D1C005ABC18 /* sha256.cpp */; };
+		87709EEC294EDD590084AEE0 /* tileimpl-n1x1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87709EE9294EDD580084AEE0 /* tileimpl-n1x1.cpp */; };
+		87709EED294EDD590084AEE0 /* tileimpl-h2x1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87709EEA294EDD580084AEE0 /* tileimpl-h2x1.cpp */; };
+		87709EEE294EDD590084AEE0 /* tileimpl-n2x1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87709EEB294EDD580084AEE0 /* tileimpl-n2x1.cpp */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		94790D7A14C0C46900B30798 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790CDC14C0C46900B30798 /* apu.cpp */; };
@@ -149,6 +152,10 @@
 		8769DC9C20D19CDB005ABC18 /* bml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bml.cpp; path = src/bml.cpp; sourceTree = "<group>"; };
 		8769DC9E20D19D1C005ABC18 /* sha256.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sha256.cpp; path = src/sha256.cpp; sourceTree = "<group>"; };
 		8769DC9F20D19D1C005ABC18 /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha256.h; path = src/sha256.h; sourceTree = "<group>"; };
+		87709EE8294EDD580084AEE0 /* tileimpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tileimpl.h; path = src/tileimpl.h; sourceTree = "<group>"; };
+		87709EE9294EDD580084AEE0 /* tileimpl-n1x1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tileimpl-n1x1.cpp"; path = "src/tileimpl-n1x1.cpp"; sourceTree = "<group>"; };
+		87709EEA294EDD580084AEE0 /* tileimpl-h2x1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tileimpl-h2x1.cpp"; path = "src/tileimpl-h2x1.cpp"; sourceTree = "<group>"; };
+		87709EEB294EDD580084AEE0 /* tileimpl-n2x1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tileimpl-n2x1.cpp"; path = "src/tileimpl-n2x1.cpp"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* SNES9x.oecoreplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SNES9x.oecoreplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94790CDA14C0C46900B30798 /* 65c816.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 65c816.h; path = src/65c816.h; sourceTree = "<group>"; };
@@ -452,6 +459,10 @@
 				87431C051B02F20700F82158 /* stream.h */,
 				94790D6A14C0C46900B30798 /* tile.cpp */,
 				94790D6B14C0C46900B30798 /* tile.h */,
+				87709EEA294EDD580084AEE0 /* tileimpl-h2x1.cpp */,
+				87709EE9294EDD580084AEE0 /* tileimpl-n1x1.cpp */,
+				87709EEB294EDD580084AEE0 /* tileimpl-n2x1.cpp */,
+				87709EE8294EDD580084AEE0 /* tileimpl.h */,
 			);
 			name = core;
 			sourceTree = "<group>";
@@ -673,6 +684,9 @@
 				94790DB714C0C46900B30798 /* spc7110.cpp in Sources */,
 				94790DBA14C0C46900B30798 /* srtc.cpp in Sources */,
 				94790DBC14C0C46900B30798 /* tile.cpp in Sources */,
+				87709EED294EDD590084AEE0 /* tileimpl-h2x1.cpp in Sources */,
+				87709EEC294EDD590084AEE0 /* tileimpl-n1x1.cpp in Sources */,
+				87709EEE294EDD590084AEE0 /* tileimpl-n2x1.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

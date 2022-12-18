@@ -144,7 +144,7 @@ void S9xSuperFXExec (void)
 {
 	if ((Memory.FillRAM[0x3000 + GSU_SFR] & FLG_G) && (Memory.FillRAM[0x3000 + GSU_SCMR] & 0x18) == 0x18)
 	{
-		FxEmulate(((Memory.FillRAM[0x3000 + GSU_CLSR] & 1) ? (SuperFX.speedPerLine * 8 / 3) : SuperFX.speedPerLine) * Settings.SuperFXClockMultiplier / 100);
+		FxEmulate(((Memory.FillRAM[0x3000 + GSU_CLSR] & 1) ? (SuperFX.speedPerLine * 5 / 2) : SuperFX.speedPerLine) * Settings.SuperFXClockMultiplier / 100);
 
 		uint16 GSUStatus = Memory.FillRAM[0x3000 + GSU_SFR] | (Memory.FillRAM[0x3000 + GSU_SFR + 1] << 8);
 		if ((GSUStatus & (FLG_G | FLG_IRQ)) == FLG_IRQ)
@@ -218,8 +218,8 @@ static void FxReset (struct FxInfo_s *psFxInfo)
 
 static void fx_readRegisterSpace (void)
 {
-	static uint32	avHeight[] = { 128, 160, 192, 256 };
-	static uint32	avMult[]   = {  16,  32,  32,  64 };
+	static const uint32	avHeight[] = { 128, 160, 192, 256 };
+	static const uint32	avMult[]   = {  16,  32,  32,  64 };
 
 	uint8	*p;
 	int		n;
@@ -228,16 +228,12 @@ static void fx_readRegisterSpace (void)
 
 	// Update R0-R15
 	p = GSU.pvRegisters;
-	for (int i = 0; i < 16; i++)
-	{
-		GSU.avReg[i] = *p++;
-		GSU.avReg[i] += ((uint32) (*p++)) << 8;
-	}
+	for (int i = 0; i < 16; i++, p += 2)
+		GSU.avReg[i] = (uint32) READ_WORD(p);
 
 	// Update other registers
 	p = GSU.pvRegisters;
-	GSU.vStatusReg     =  (uint32) p[GSU_SFR];
-	GSU.vStatusReg    |= ((uint32) p[GSU_SFR + 1]) << 8;
+	GSU.vStatusReg     =  (uint32) READ_WORD(&p[GSU_SFR]);
 	GSU.vPrgBankReg    =  (uint32) p[GSU_PBR];
 	GSU.vRomBankReg    =  (uint32) p[GSU_ROMBR];
 	GSU.vRamBankReg    = ((uint32) p[GSU_RAMBR]) & (FX_RAM_BANKS - 1);
@@ -291,11 +287,8 @@ static void fx_writeRegisterSpace (void)
 	uint8	*p;
 
 	p = GSU.pvRegisters;
-	for (int i = 0; i < 16; i++)
-	{
-		*p++ = (uint8)  GSU.avReg[i];
-		*p++ = (uint8) (GSU.avReg[i] >> 8);
-	}
+	for (int i = 0; i < 16; i++, p += 2)
+		WRITE_WORD(p, GSU.avReg[i]);
 
 	// Update status register
 	if (USEX16(GSU.vZero) == 0)
@@ -319,13 +312,11 @@ static void fx_writeRegisterSpace (void)
 		CF(CY);
 
 	p = GSU.pvRegisters;
-	p[GSU_SFR]     = (uint8)  GSU.vStatusReg;
-	p[GSU_SFR + 1] = (uint8) (GSU.vStatusReg >> 8);
+	WRITE_WORD(&p[GSU_SFR], GSU.vStatusReg);
 	p[GSU_PBR]     = (uint8)  GSU.vPrgBankReg;
 	p[GSU_ROMBR]   = (uint8)  GSU.vRomBankReg;
 	p[GSU_RAMBR]   = (uint8)  GSU.vRamBankReg;
-	p[GSU_CBR]     = (uint8)  GSU.vCacheBaseReg;
-	p[GSU_CBR + 1] = (uint8) (GSU.vCacheBaseReg >> 8);
+	WRITE_WORD(&p[GSU_CBR], GSU.vCacheBaseReg);
 
 	//fx_restoreCache();
 }

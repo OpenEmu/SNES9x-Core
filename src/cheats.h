@@ -33,7 +33,7 @@ struct SCheatData
 	std::vector<struct SCheatGroup> g;
 	bool8	enabled;
 	uint8	CWRAM[0x20000];
-	uint8	CSRAM[0x10000];
+	uint8	CSRAM[0x80000];
 	uint8	CIRAM[0x2000];
 	uint8	*RAM;
 	uint8	*FillRAM;
@@ -86,7 +86,7 @@ void S9xUpdateCheatsInMemory (void);
 int S9xImportCheatsFromDatabase(const char *filename);
 void S9xCheatsDisable (void);
 void S9xCheatsEnable (void);
-char *S9xCheatValidate (char *cheat);
+char *S9xCheatValidate (const char *cheat);
 
 void S9xInitCheatData (void);
 void S9xInitWatchedAddress (void);
