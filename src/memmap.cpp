@@ -1267,7 +1267,9 @@ uint32 CMemory::FileLoader (uint8 *buffer, const char *filename, uint32 maxsize)
 	_makepath(fname, drive, dir, name, exts);
 
 	int	nFormat = FILE_DEFAULT;
-	if (strcasecmp(ext, "zip") == 0 || strcasecmp(ext, "msu1") == 0)
+    // OpenEmu
+	//if (strcasecmp(ext, "zip") == 0 || strcasecmp(ext, "msu1") == 0)
+    if (strcasecmp(ext, "msu1") == 0)
 		nFormat = FILE_ZIP;
 	else
 	if (strcasecmp(ext, "jma") == 0)
