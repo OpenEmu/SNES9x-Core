@@ -101,9 +101,8 @@ static __weak SNESGameCore *_current;
     Settings.SoundInputRate         = 32040;
     Settings.DynamicRateControl     = false;
     Settings.DynamicRateLimit       = 5;
-    Settings.SupportHiRes           = true;
     Settings.Transparency           = true;
-    GFX.InfoString                  = NULL;
+    GFX.InfoString.clear();
     GFX.InfoStringTimeout           = 0;
     Settings.DontSaveOopsSnapshot   = true;
     Settings.NoPatch                = true;
@@ -123,7 +122,6 @@ static __weak SNESGameCore *_current;
 
     _indirectVideoBuffer = (uint16_t *)malloc(MAX_SNES_WIDTH * MAX_SNES_HEIGHT * sizeof(uint16_t));
 
-    GFX.Pitch = 512 * 2;
     GFX.Screen = _indirectVideoBuffer;
 
     S9xUnmapAllControls();
@@ -666,7 +664,7 @@ static __weak SNESGameCore *_current;
 - (void)stopEmulation
 {
     // Save SRAM
-    NSURL *url = [NSURL fileURLWithPath:@(Memory.ROMFilename)];
+    NSURL *url = [NSURL fileURLWithPath:@(Memory.ROMFilename.c_str())];
     NSString *extensionlessFilename = url.lastPathComponent.stringByDeletingPathExtension;
     NSURL *batterySavesDirectory = [NSURL fileURLWithPath:self.batterySavesDirectoryPath];
     NSURL *saveFileURL = [batterySavesDirectory URLByAppendingPathComponent:[extensionlessFilename stringByAppendingPathExtension:@"sav"]];
@@ -907,7 +905,7 @@ NSString *SNESEmulatorKeys[] = { @"Up", @"Down", @"Left", @"Right", @"A", @"B", 
                 const char *cheatCode = [singleCode stringByReplacingOccurrencesOfString:@":" withString:@""].UTF8String;
 
                 S9xAddCheatGroup("OpenEmu", cheatCode);
-                S9xEnableCheatGroup(Cheat.g.size () - 1);
+                S9xEnableCheatGroup(Cheat.group.size() - 1);
             }
         }
     }
@@ -935,42 +933,7 @@ void S9xMessage(int type, int number, const char *message)
     NSLog(@"[Snes9x] %s", message);
 }
 
-void _splitpath(const char *path, char *drive, char *dir, char *fname, char *ext)
-{
-    // This function is mostly used for various Snes9x generated snapshots (functionality that belongs in the frontend instead), but defined anyway
-    NSString *nsPath = @(path);
-
-    drive[0] = '\0';
-
-    NSString *extension = nsPath.pathExtension;
-    NSArray *components = nsPath.pathComponents;
-    NSArray *dirComponents = [nsPath.pathComponents subarrayWithRange:NSMakeRange(0, components.count - 1)];
-    NSString *fileName = [nsPath.lastPathComponent stringByDeletingPathExtension];
-    NSString *directory = [NSString pathWithComponents:dirComponents];
-
-    strcpy(dir, directory.UTF8String);
-    strcpy(fname, fileName.UTF8String);
-    strcpy(ext, extension.UTF8String);
-}
-
-void _makepath(char *path, const char *drive, const char *dir, const char *fname, const char *ext)
-{
-    // This function is mostly used for Snes9x internal soft patching, but defined anyway
-#pragma unused (drive)
-
-    NSString *directory = @(dir);
-    NSString *fileName = @(fname);
-    NSString *extension = @(ext);
-
-    fileName = [fileName stringByAppendingPathExtension:extension];
-
-    NSString *fullPath = [directory stringByAppendingPathComponent:fileName];
-    NSURL *fullURL = [NSURL fileURLWithPath:fullPath];
-
-    strcpy(path, fullURL.fileSystemRepresentation);
-}
-
-const char *S9xGetDirectory(enum s9x_getdirtype dirtype)
+std::string S9xGetDirectory(enum s9x_getdirtype dirtype)
 {
     // We don't seem to use this function, but defined anyway
     NSURL *batterySavesDirectory = [NSURL fileURLWithPath:_current.batterySavesDirectoryPath];
@@ -982,7 +945,7 @@ const char *S9xGetDirectory(enum s9x_getdirtype dirtype)
         case SRAM_DIR:          return batterySavesDirectory.fileSystemRepresentation;  break;
         case BIOS_DIR:          return biosDirectoryURL.fileSystemRepresentation;   break;
         case SAT_DIR:           return biosDirectoryURL.fileSystemRepresentation;   break;
-        default:                return NULL;    break;
+        default:                return "";    break;
     }
 }
 
@@ -1019,25 +982,14 @@ unsigned char S9xContinueUpdate(int width, int height)
     return true;
 }
 
-const char *S9xBasename(const char *filename)
-{
-    // Called by S9xFreezeGame/S9xUnfreezeGame -- useless for us
-    return NULL;
-}
-
 const char *S9xStringInput(const char *message)
 {
     return NULL;
 }
 
-const char *S9xGetFilename(const char *extension, enum s9x_getdirtype dirtype)
+std::string S9xGetFilenameInc(std::string, enum s9x_getdirtype)
 {
     return "";
-}
-
-const char *S9xGetFilenameInc(const char *, enum s9x_getdirtype)
-{
-    return NULL;
 }
 
 bool S9xPollButton(uint32 id, bool *pressed)

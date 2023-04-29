@@ -37,6 +37,7 @@
 		87709EEE294EDD590084AEE0 /* tileimpl-n2x1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87709EEB294EDD580084AEE0 /* tileimpl-n2x1.cpp */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		8F6CC7A029FD51E2006C7D59 /* fscompat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F6CC79E29FD51E2006C7D59 /* fscompat.cpp */; };
 		94790D7A14C0C46900B30798 /* apu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790CDC14C0C46900B30798 /* apu.cpp */; };
 		94790D8114C0C46900B30798 /* bsx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790CF014C0C46900B30798 /* bsx.cpp */; };
 		94790D8214C0C46900B30798 /* c4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94790CF214C0C46900B30798 /* c4.cpp */; };
@@ -158,6 +159,8 @@
 		87709EEB294EDD580084AEE0 /* tileimpl-n2x1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tileimpl-n2x1.cpp"; path = "src/tileimpl-n2x1.cpp"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* SNES9x.oecoreplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SNES9x.oecoreplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F6CC79E29FD51E2006C7D59 /* fscompat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fscompat.cpp; path = src/fscompat.cpp; sourceTree = "<group>"; };
+		8F6CC79F29FD51E2006C7D59 /* fscompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fscompat.h; path = src/fscompat.h; sourceTree = "<group>"; };
 		94790CDA14C0C46900B30798 /* 65c816.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 65c816.h; path = src/65c816.h; sourceTree = "<group>"; };
 		94790CDC14C0C46900B30798 /* apu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = apu.cpp; sourceTree = "<group>"; };
 		94790CDD14C0C46900B30798 /* apu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = apu.h; sourceTree = "<group>"; };
@@ -394,6 +397,8 @@
 				94790D0F14C0C46900B30798 /* dsp3.cpp */,
 				94790D1014C0C46900B30798 /* dsp4.cpp */,
 				94790D1114C0C46900B30798 /* font.h */,
+				8F6CC79E29FD51E2006C7D59 /* fscompat.cpp */,
+				8F6CC79F29FD51E2006C7D59 /* fscompat.h */,
 				94790D1214C0C46900B30798 /* fxdbg.cpp */,
 				94790D1314C0C46900B30798 /* fxemu.cpp */,
 				94790D1414C0C46900B30798 /* fxemu.h */,
@@ -668,6 +673,7 @@
 				94790DA714C0C46900B30798 /* netplay.cpp in Sources */,
 				94790DA814C0C46900B30798 /* obc1.cpp in Sources */,
 				94790DA914C0C46900B30798 /* ppu.cpp in Sources */,
+				8F6CC7A029FD51E2006C7D59 /* fscompat.cpp in Sources */,
 				87431C061B02F20700F82158 /* stream.cpp in Sources */,
 				94790DAB14C0C46900B30798 /* sa1.cpp in Sources */,
 				94790DAC14C0C46900B30798 /* sa1cpu.cpp in Sources */,
@@ -716,6 +722,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				HEADER_SEARCH_PATHS = (
@@ -745,6 +752,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_STRICT_ALIASING = YES;
