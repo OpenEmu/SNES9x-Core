@@ -99,11 +99,7 @@ __extension__
 #endif
 typedef long long			int64;
 typedef unsigned long long	uint64;
-#ifdef PTR_NOT_INT
 typedef size_t				pint;
-#else   // __PTR_NOT_INT
-typedef size_t					pint;
-#endif  // __PTR_NOT_INT
 #endif	//  __WIN32__
 #endif	// HAVE_STDINT_H
 #endif	// snes9x_types_defined
@@ -120,22 +116,17 @@ typedef size_t					pint;
 
 #ifndef __WIN32__
 #ifndef PATH_MAX
-#define PATH_MAX	1024
+#define PATH_MAX        1024
 #endif
-#define _MAX_DRIVE	1
-#define _MAX_DIR	PATH_MAX
-#define _MAX_FNAME	PATH_MAX
-#define _MAX_EXT	PATH_MAX
-#define _MAX_PATH	PATH_MAX
 #else
 #ifndef PATH_MAX
-#define PATH_MAX	_MAX_PATH
+#define PATH_MAX        _MAX_PATH
 #endif
 #endif
 
+#include "fscompat.h"
+
 #ifndef __WIN32__
-void _splitpath (const char *, char *, char *, char *, char *);
-void _makepath (char *, const char *, const char *, const char *, const char *);
 #define S9xDisplayString	DisplayStringFromBottom
 #else   // __WIN32__
 #define snprintf _snprintf
