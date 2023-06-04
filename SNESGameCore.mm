@@ -508,6 +508,7 @@ static __weak SNESGameCore *_current;
           @"e9334b9e", // Secret of Mana (France) (Rev 1)
           @"b069bb3a", // Secret of Mana (Germany)
           @"b8049e3c", // Seiken Densetsu 2 (Japan)
+          @"80d9ed26", // Seiken Densetsu 3 (Japan) (Fan English Translation v1.01) [3-Player Edition]
           @"d0176b24", // Secret of Mana (USA)
           @"e6b9a402", // Shijou Saikyou no Quiz Ou Ketteisen Super (Japan)
           @"58da330c", // Shin Nihon Pro Wrestling - Chou Senshi in Tokyo Dome - Fantastic Story (Japan)
@@ -580,6 +581,7 @@ static __weak SNESGameCore *_current;
           @"493fdb13", // Top Gear 3000 (Europe)
           @"b9b9df06", // Planet's Champ TG 3000, The (Japan)
           @"a20be998", // Top Gear 3000 (USA)
+          @"f397bd57", // Trials of Mana (USA) [3-Player Edition] (Released 2019)
           @"26a9c3f4", // Turbo Toons (Europe)
           @"ecb8a53a", // Virtual Soccer (Europe)
           @"1d20cac2", // J.League Super Soccer (Japan)
